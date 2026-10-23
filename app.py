@@ -155,6 +155,4 @@ with col_stats:
         else:
             st.error("評価が不十分なため、報酬は支払われませんでした。")
 
-        prompt = generate_room_prompt(st.session_state.current_client, placed_ids)
-        with st.expander("🎨 生成ビジュアルプロンプト (Gemini API用)"):
-            st.code(prompt, language="text")
+        
