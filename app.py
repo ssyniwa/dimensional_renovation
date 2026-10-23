@@ -1,5 +1,5 @@
 """
-『異次元インテリア・リノベーション』 Main Streamlit Application
+『異次元インテリア・リノベーション』 Main Streamlit Application (画像対応版)
 """
 import streamlit as st
 from data import CLIENT_TYPES, FURNITURE_CATALOG
@@ -13,7 +13,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# カスタムCSS（ダーク・サイバー調UI）
+# カスタムCSS
 st.markdown("""
 <style>
     .main { background-color: #0d1117; color: #c9d1d9; }
@@ -24,13 +24,6 @@ st.markdown("""
         border-radius: 10px;
         border: 1px solid #30363d;
         margin-bottom: 10px;
-    }
-    .metric-box {
-        background-color: #21262d;
-        padding: 10px;
-        border-radius: 8px;
-        text-align: center;
-        border: 1px solid #30363d;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -43,21 +36,23 @@ if "reputation" not in st.session_state:
 if "current_client" not in st.session_state:
     st.session_state.current_client = "magma_dragon"
 if "grid_furniture" not in st.session_state:
-    # 6x6 グリッド (空文字で初期化)
     st.session_state.grid_furniture = [["" for _ in range(6)] for _ in range(6)]
-if "portfolio" not in st.session_state:
-    st.session_state.portfolio = []
 
-# サイドバー：事務所パラメータ
+# サイドバー：事務所パラメータ & 顧客選択
 st.sidebar.title("🌌 次元建築事務所")
 st.sidebar.metric("所持金", f"{st.session_state.funds:,} Cr")
 st.sidebar.metric("事務所の評判", f"Rank {st.session_state.reputation // 100 + 1} ({st.session_state.reputation} pt)")
 
 st.sidebar.divider()
 st.sidebar.subheader("📋 依頼者を選択")
-for key, client in CLIENT_TYPES.items():
-    if st.sidebar.button(f"{client['avatar_icon']} {client['name']}", key=f"btn_{key}"):
-        st.session_state.current_client = key
+
+for key, client_data in CLIENT_TYPES.items():
+    col_ico, col_btn = st.sidebar.columns([1, 3])
+    with col_ico:
+        st.image(client_data["avatar_image"], width=40)
+    with col_btn:
+        if st.button(client_data["name"], key=f"btn_{key}"):
+            st.session_state.current_client = key
 
 # メイン表示エリア
 client = CLIENT_TYPES[st.session_state.current_client]
@@ -65,15 +60,15 @@ client = CLIENT_TYPES[st.session_state.current_client]
 st.title("異次元インテリア・リノベーション")
 st.caption("マルチバースの異世界顧客に向けた、理想の次元空間設計シミュレーション")
 
-# メインコンテンツレイアウト (3カラム)
 col_client, col_grid, col_stats = st.columns([1, 1.3, 1])
 
 # --- カラム1: クライアント情報 ---
 with col_client:
     st.subheader("👤 クライアント要件")
+    st.image(client["avatar_image"], use_container_width=True)
     st.markdown(f"""
     <div class="client-card">
-        <h3>{client['avatar_icon']} {client['name']}</h3>
+        <h3>{client['name']}</h3>
         <p><b>{client['title']}</b></p>
         <p>{client['description']}</p>
         <hr style="border-color:#30363d;">
@@ -88,26 +83,26 @@ with col_client:
     selected_furniture = st.selectbox(
         "配置するアイテムを選択",
         options=list(FURNITURE_CATALOG.keys()),
-        format_func=lambda x: f"{FURNITURE_CATALOG[x]['icon']} {FURNITURE_CATALOG[x]['name']} ({FURNITURE_CATALOG[x]['cost']:,} Cr)"
+        format_func=lambda x: FURNITURE_CATALOG[x]['name']
     )
     
     item_info = FURNITURE_CATALOG[selected_furniture]
-    st.info(f"**効果**: 温度 {item_info['temp_delta']:+}°C | 湿度 {item_info['humidity_delta']:+}% | 重力 {item_info['gravity_delta']:+}G | 審美度 +{item_info['aesthetic']}")
+    st.image(item_info["image_path"], use_container_width=True)
+    st.info(f"**{item_info['name']}**\n\nコスト: {item_info['cost']:,} Cr\n温度 {item_info['temp_delta']:+}°C | 湿度 {item_info['humidity_delta']:+}% | 重力 {item_info['gravity_delta']:+}G | 審美度 +{item_info['aesthetic']}")
 
 # --- カラム2: 6x6 グリッド設計室 ---
 with col_grid:
     st.subheader("📐 6×6 空間デザイン設計")
     
-    # 選択したパーツをグリッドへ適用するための操作ボタン
     click_mode = st.radio("マス操作モード", ["設置", "撤去"], horizontal=True)
 
-    # グリッド描画
     grid_container = st.container()
     for r in range(6):
         cols = grid_container.columns(6)
         for c in range(6):
             cell_item = st.session_state.grid_furniture[r][c]
-            label = FURNITURE_CATALOG[cell_item]["icon"] if cell_item else " "
+            # グリッドボタンには家具の名前略称やアイコンを表示（画像は入りませんが、設置されていると名前を表示）
+            label = FURNITURE_CATALOG[cell_item]["name"][:2] if cell_item else "・"
             
             if cols[c].button(label, key=f"cell_{r}_{c}"):
                 if click_mode == "設置":
@@ -120,7 +115,6 @@ with col_grid:
         st.session_state.grid_furniture = [["" for _ in range(6)] for _ in range(6)]
         st.rerun()
 
-# 配置された家具のリスト化
 placed_ids = [cell for row in st.session_state.grid_furniture for cell in row if cell]
 current_stats = calculate_room_stats(placed_ids)
 
@@ -141,14 +135,12 @@ with col_stats:
     c3.metric("重力レベル", f"{current_stats['gravity']} G", delta=round(current_stats['gravity'] - client['target_gravity'], 2))
     c4.metric("審美スコア", f"{current_stats['aesthetic']} pt")
 
-    # 予算ゲージ
     cost_percentage = min(1.0, current_stats['cost'] / client['budget'])
     st.write(f"**使用予算**: {current_stats['cost']:,} / {client['budget']:,} Cr")
     st.progress(cost_percentage)
 
     st.divider()
 
-    # 施工・評価実行ボタン
     if st.button("🔨 リノベーション施工・レビュー実行", type="primary"):
         result = evaluate_renovation(st.session_state.current_client, placed_ids)
         
@@ -163,7 +155,6 @@ with col_stats:
         else:
             st.error("評価が不十分なため、報酬は支払われませんでした。")
 
-        # 生成用プロンプトの提示
         prompt = generate_room_prompt(st.session_state.current_client, placed_ids)
         with st.expander("🎨 生成ビジュアルプロンプト (Gemini API用)"):
             st.code(prompt, language="text")
