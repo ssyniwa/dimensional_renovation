@@ -55,27 +55,27 @@ def evaluate_renovation(client_key, placed_furniture_ids):
     # 2. 種族別の環境適応度計算カスタム分岐
     if client_key == "magma_dragon":
         # 溶岩竜族: 高温であるほど良い（最低800°C）、湿度は低いほど良い、重力は重い方が落ち着く
-        temp_score = 100 if stats["temp"] >= 800 else max(0, 100 - (800 - stats["temp"]) // 5)
+        temp_score = 100 if stats["temp"] >= 800 else max(0, 100 - (800 - stats["temp"]) // 2)
         hum_score = 100 if stats["humidity"] <= 10 else max(0, 100 - (stats["humidity"] - 10) * 3)
         grav_diff = abs(stats["gravity"] - 1.5)
         grav_score = max(0, int(grav_diff * 40))
 
     elif client_key == "cyber_ai":
         # 電脳AI: 極低温を好む（-100°C以下が理想）、湿度は完全ゼロ必須、重力は完全無重力(0G)が理想
-        temp_score = 100 if stats["temp"] <= -100 else max(0, 100 - (stats["temp"] - (-100)) // 5)
+        temp_score = 100 if stats["temp"] <= -100 else max(0, 100 - (stats["temp"] - (-100)) // 2)
         hum_score = 100 if stats["humidity"] == 0 else max(0, 100 - stats["humidity"] * 5)
         grav_score = 100 if stats["gravity"] == 0.0 else max(0, 100 - int(stats["gravity"] * 100))
 
     elif client_key == "deepsea_crystal":
         # 深海結晶生命体: 水温は冷たい方が良い（-10°C以下）、湿度は超高湿度（80%以上）、高水圧（重力高め）を好む
-        temp_score = 100 if stats["temp"] <= -10 else max(0, 100 - (stats["temp"] - (-10)) // 5)
+        temp_score = 100 if stats["temp"] <= -10 else max(0, 100 - (stats["temp"] - (-10)) // 2)
         hum_score = 100 if stats["humidity"] >= 80 else max(0, 100 - (80 - stats["humidity"]) * 2)
         grav_diff = abs(stats["gravity"] - 1.6)
         grav_score = max(0, int(grav_diff * 30))
 
     elif client_key == "astral_spirit":
         # 風使い: 常温（15〜30°C）、湿度は中程度、完全に無重力（0G）であること
-        temp_score = 100 if 15 <= stats["temp"] <= 30 else max(0, 100 - abs(stats["temp"] - 22) * 4)
+        temp_score = 100 if 15 <= stats["temp"] <= 30 else max(0, 100 - abs(stats["temp"] - 22) * 2)
         hum_score = 100 if 30 <= stats["humidity"] <= 50 else max(0, 100 - abs(stats["humidity"] - 40) * 2)
         grav_score = 100 if stats["gravity"] <= 0.1 else max(0, 100 - int(stats["gravity"] * 80))
 
