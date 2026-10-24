@@ -55,7 +55,7 @@ def evaluate_renovation(client_key, placed_furniture_ids):
     # 2. 種族別の環境適応度計算カスタム分岐
     if client_key == "magma_dragon":
         # 溶岩竜族: 高温であるほど良い（最低800°C）、湿度は低いほど良い、重力は重い方が落ち着く
-        temp_score = 100 if stats["temp"] >= 800 else max(0, 100 - (800 - stats["temp"]) // 8)
+        temp_score = 100 if stats["temp"] >= 800 else max(0, 100 - (800 - stats["temp"]) // 5)
         hum_score = 100 if stats["humidity"] <= 10 else max(0, 100 - (stats["humidity"] - 10) * 3)
         grav_diff = abs(stats["gravity"] - 1.5)
         grav_score = max(0, int(grav_diff * 40))
