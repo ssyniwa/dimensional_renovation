@@ -124,7 +124,7 @@ with col_grid:
                     else:
                         st.markdown(f"<div style='text-align:center; font-size:10px;'>[配置済]</div>", unsafe_allow_html=True)
                 else:
-                    st.markdown(f"<div class='grid-cell' style='height:45px; display:flex; align-items:center; justify-content:center; color:#30363d;'>+</div>", unsafe_allow_html=True)
+                    st.markdown(f"<div class='grid-cell' style='height:90px; display:flex; align-items:center; justify-content:center; color:#30363d;'>+</div>", unsafe_allow_html=True)
                 
                 # 各セルのクリックボタン
                 btn_label = "❌" if cell_item else "📍"
