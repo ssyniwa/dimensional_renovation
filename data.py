@@ -12,7 +12,7 @@ CLIENT_TYPES = {
         "target_gravity": 1.5,
         "budget": 60000,
         "preferred_style": "industrial_magma",
-        "avatar_image": "images/clients/magma_dragon.png"
+        "avatar_image": "images/clients/magma_dragon.jpg"
     },
     "cyber_ai": {
         "name": "電脳空間のAI精神体",
@@ -23,7 +23,7 @@ CLIENT_TYPES = {
         "target_gravity": 0.0,
         "budget": 85000,
         "preferred_style": "cyberpunk_neon",
-        "avatar_image": "images/clients/cyber_ai.png"
+        "avatar_image": "images/clients/cyber_ai.jpg"
     },
     "deepsea_crystal": {
         "name": "深海の結晶生命体",
@@ -34,7 +34,7 @@ CLIENT_TYPES = {
         "target_gravity": 1.0,
         "budget": 75000,
         "preferred_style": "crystal_ocean",
-        "avatar_image": "images/clients/deepsea_crystal.png"
+        "avatar_image": "images/clients/deepsea_crystal.jpg"
     },
     "astral_spirit": {
         "name": "次元回廊の風使い",
@@ -45,7 +45,7 @@ CLIENT_TYPES = {
         "target_gravity": 0.0,
         "budget": 50000,
         "preferred_style": "astral_ether",
-        "avatar_image": "images/clients/astral_spirit.png"
+        "avatar_image": "images/clients/astral_spirit.jpg"
     }
 }
 
@@ -59,7 +59,7 @@ FURNITURE_CATALOG = {
         "gravity_delta": 0.2,
         "aesthetic": 15,
         "style": "industrial_magma",
-        "image_path": "images/furniture/magma_floor.png"
+        "image_path": "images/furniture/magma_floor.jpg"
     },
     "f_cool_panel": {
         "name": "超伝導冷却パネル",
@@ -70,7 +70,7 @@ FURNITURE_CATALOG = {
         "gravity_delta": 0.0,
         "aesthetic": 20,
         "style": "cyberpunk_neon",
-        "image_path": "images/furniture/cool_panel.png"
+        "image_path": "images/furniture/cool_panel.jpg"
     },
     "f_crystal_pool": {
         "name": "深海高圧ウォータープール",
@@ -81,7 +81,7 @@ FURNITURE_CATALOG = {
         "gravity_delta": 0.3,
         "aesthetic": 30,
         "style": "crystal_ocean",
-        "image_path": "images/furniture/crystal_pool.png"
+        "image_path": "images/furniture/crystal_pool.jpg"
     },
     "f_zerog_field": {
         "name": "ゼロG発生ジェネレーター",
@@ -92,7 +92,7 @@ FURNITURE_CATALOG = {
         "gravity_delta": -1.0,
         "aesthetic": 25,
         "style": "astral_ether",
-        "image_path": "images/furniture/zerog_field.png"
+        "image_path": "images/furniture/zerog_field.jpg"
     },
     "f_dark_fireplace": {
         "name": "反物質暖炉",
@@ -103,7 +103,7 @@ FURNITURE_CATALOG = {
         "gravity_delta": 0.1,
         "aesthetic": 45,
         "style": "industrial_magma",
-        "image_path": "images/furniture/dark_fireplace.png"
+        "image_path": "images/furniture/dark_fireplace.jpg"
     },
     "f_data_sofa": {
         "name": "量子データ同期ソファ",
@@ -114,7 +114,7 @@ FURNITURE_CATALOG = {
         "gravity_delta": 0.0,
         "aesthetic": 35,
         "style": "cyberpunk_neon",
-        "image_path": "images/furniture/data_sofa.png"
+        "image_path": "images/furniture/data_sofa.jpg"
     },
     "f_biolum_plant": {
         "name": "発光水晶樹のインテリア",
@@ -125,7 +125,7 @@ FURNITURE_CATALOG = {
         "gravity_delta": 0.0,
         "aesthetic": 40,
         "style": "crystal_ocean",
-        "image_path": "images/furniture/biolum_plant.png"
+        "image_path": "images/furniture/biolum_plant.jpg"
     },
     "f_ether_chandelier": {
         "name": "エーテル気流シャンデリア",
@@ -136,6 +136,6 @@ FURNITURE_CATALOG = {
         "gravity_delta": -0.2,
         "aesthetic": 50,
         "style": "astral_ether",
-        "image_path": "images/furniture/ether_chandelier.png"
+        "image_path": "images/furniture/ether_chandelier.jpg"
     }
 }
