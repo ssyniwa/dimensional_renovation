@@ -70,7 +70,7 @@ client = CLIENT_TYPES[st.session_state.current_client]
 st.title("異次元インテリア・リノベーション")
 st.caption("マルチバースの異世界顧客に向けた、理想の次元空間設計シミュレーション")
 
-col_client, col_grid, col_stats = st.columns([1, 1.4, 1])
+col_client, col_grid, col_stats = st.columns([0.8, 2.1, 0.5])
 
 # --- カラム1: クライアント情報 & 家具カタログ ---
 with col_client:
