@@ -144,7 +144,7 @@ FURNITURE_CATALOG = {
         "name": "超高圧プラズマ溶鉱炉",
         "category": "大型家具",
         "cost": 28000,
-        "temp_delta": 85,
+        "temp_delta": 50,
         "humidity_delta": -50,
         "gravity_delta": 0.1,
         "aesthetic": 55,
@@ -157,7 +157,7 @@ FURNITURE_CATALOG = {
         "cost": 16000,
         "temp_delta": 15,
         "humidity_delta": -10,
-        "gravity_delta": 0.1,
+        "gravity_delta": 0.0,
         "aesthetic": 30,
         "style": "industrial_magma",
         "image_path": "images/furniture/liquid_metal_wall.jpg"
