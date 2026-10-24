@@ -155,7 +155,7 @@ FURNITURE_CATALOG = {
         "name": "液体金属防壁パネル",
         "category": "床・壁",
         "cost": 16000,
-        "temp_delta": 15,
+        "temp_delta": 5,
         "humidity_delta": -10,
         "gravity_delta": 0.0,
         "aesthetic": 30,
