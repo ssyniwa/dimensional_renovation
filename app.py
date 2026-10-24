@@ -1,6 +1,7 @@
 """
-『異次元インテリア・リノベーション』 Main Streamlit Application (画像対応版)
+『異次元インテリア・リノベーション』 Main Streamlit Application (グリッド画像配置対応版)
 """
+import os
 import streamlit as st
 from data import CLIENT_TYPES, FURNITURE_CATALOG
 from models import calculate_room_stats, evaluate_renovation, generate_room_prompt
@@ -17,13 +18,21 @@ st.set_page_config(
 st.markdown("""
 <style>
     .main { background-color: #0d1117; color: #c9d1d9; }
-    .stButton>button { width: 100%; border-radius: 6px; }
+    .stButton>button { width: 100%; border-radius: 4px; font-size: 12px; padding: 2px; }
     .client-card {
         background-color: #161b22;
         padding: 15px;
         border-radius: 10px;
         border: 1px solid #30363d;
         margin-bottom: 10px;
+    }
+    .grid-cell {
+        background-color: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 6px;
+        padding: 5px;
+        text-align: center;
+        min-height: 90px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -49,7 +58,8 @@ st.sidebar.subheader("📋 依頼者を選択")
 for key, client_data in CLIENT_TYPES.items():
     col_ico, col_btn = st.sidebar.columns([1, 3])
     with col_ico:
-        st.image(client_data["avatar_image"], width=40)
+        if os.path.exists(client_data["avatar_image"]):
+            st.image(client_data["avatar_image"], width=35)
     with col_btn:
         if st.button(client_data["name"], key=f"btn_{key}"):
             st.session_state.current_client = key
@@ -60,12 +70,13 @@ client = CLIENT_TYPES[st.session_state.current_client]
 st.title("異次元インテリア・リノベーション")
 st.caption("マルチバースの異世界顧客に向けた、理想の次元空間設計シミュレーション")
 
-col_client, col_grid, col_stats = st.columns([1, 1.3, 1])
+col_client, col_grid, col_stats = st.columns([1, 1.4, 1])
 
-# --- カラム1: クライアント情報 ---
+# --- カラム1: クライアント情報 & 家具カタログ ---
 with col_client:
     st.subheader("👤 クライアント要件")
-    st.image(client["avatar_image"], use_container_width=True)
+    if os.path.exists(client["avatar_image"]):
+        st.image(client["avatar_image"], use_container_width=True)
     st.markdown(f"""
     <div class="client-card">
         <h3>{client['name']}</h3>
@@ -87,29 +98,42 @@ with col_client:
     )
     
     item_info = FURNITURE_CATALOG[selected_furniture]
-    st.image(item_info["image_path"], use_container_width=True)
+    if os.path.exists(item_info["image_path"]):
+        st.image(item_info["image_path"], use_container_width=True)
     st.info(f"**{item_info['name']}**\n\nコスト: {item_info['cost']:,} Cr\n温度 {item_info['temp_delta']:+}°C | 湿度 {item_info['humidity_delta']:+}% | 重力 {item_info['gravity_delta']:+}G | 審美度 +{item_info['aesthetic']}")
 
-# --- カラム2: 6x6 グリッド設計室 ---
+# --- カラム2: 6x6 グリッド設計室 (画像配置対応) ---
 with col_grid:
     st.subheader("📐 6×6 空間デザイン設計")
-    
-    click_mode = st.radio("マス操作モード", ["設置", "撤去"], horizontal=True)
+    click_mode = st.radio("アクション", ["選択マスに配置", "マスを撤去"], horizontal=True)
 
-    grid_container = st.container()
+    st.markdown("<p style='font-size: 12px; color: #8b949e;'>下のグリッドから操作したいマスをクリックしてください。</p>", unsafe_allow_html=True)
+
+    # 6x6 グリッドの描画
     for r in range(6):
-        cols = grid_container.columns(6)
+        cols = st.columns(6)
         for c in range(6):
             cell_item = st.session_state.grid_furniture[r][c]
-            # グリッドボタンには家具の名前略称やアイコンを表示（画像は入りませんが、設置されていると名前を表示）
-            label = FURNITURE_CATALOG[cell_item]["name"][:2] if cell_item else "・"
             
-            if cols[c].button(label, key=f"cell_{r}_{c}"):
-                if click_mode == "設置":
-                    st.session_state.grid_furniture[r][c] = selected_furniture
+            with cols[c]:
+                # セル内の表示コンテナ
+                if cell_item and cell_item in FURNITURE_CATALOG:
+                    img_path = FURNITURE_CATALOG[cell_item]["image_path"]
+                    if os.path.exists(img_path):
+                        st.image(img_path, use_container_width=True)
+                    else:
+                        st.markdown(f"<div style='text-align:center; font-size:10px;'>[配置済]</div>", unsafe_allow_html=True)
                 else:
-                    st.session_state.grid_furniture[r][c] = ""
-                st.rerun()
+                    st.markdown(f"<div class='grid-cell' style='height:45px; display:flex; align-items:center; justify-content:center; color:#30363d;'>+</div>", unsafe_allow_html=True)
+                
+                # 各セルのクリックボタン
+                btn_label = "❌" if cell_item else "📍"
+                if st.button(btn_label, key=f"grid_btn_{r}_{c}"):
+                    if click_mode == "選択マスに配置":
+                        st.session_state.grid_furniture[r][c] = selected_furniture
+                    else:
+                        st.session_state.grid_furniture[r][c] = ""
+                    st.rerun()
 
     if st.button("🗑️ 空間を全クリア"):
         st.session_state.grid_furniture = [["" for _ in range(6)] for _ in range(6)]
@@ -155,4 +179,4 @@ with col_stats:
         else:
             st.error("評価が不十分なため、報酬は支払われませんでした。")
 
-        
+       
