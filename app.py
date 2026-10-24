@@ -4,7 +4,7 @@
 import os
 import streamlit as st
 from data import CLIENT_TYPES, FURNITURE_CATALOG
-from models import calculate_room_stats, evaluate_renovation, generate_room_prompt
+from models import calculate_room_stats, evaluate_renovation
 
 # ページ基本設定
 st.set_page_config(
