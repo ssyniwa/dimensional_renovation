@@ -58,7 +58,7 @@ def evaluate_renovation(client_key, placed_furniture_ids):
         temp_score = 100 if stats["temp"] >= 800 else max(0, 100 - (800 - stats["temp"]) // 8)
         hum_score = 100 if stats["humidity"] <= 10 else max(0, 100 - (stats["humidity"] - 10) * 3)
         grav_diff = abs(stats["gravity"] - 1.5)
-        grav_score = max(0, 100 - int(grav_diff * 40))
+        grav_score = max(0, int(grav_diff * 40))
 
     elif client_key == "cyber_ai":
         # 電脳AI: 極低温を好む（-100°C以下が理想）、湿度は完全ゼロ必須、重力は完全無重力(0G)が理想
@@ -71,7 +71,7 @@ def evaluate_renovation(client_key, placed_furniture_ids):
         temp_score = 100 if stats["temp"] <= -10 else max(0, 100 - (stats["temp"] - (-10)) // 5)
         hum_score = 100 if stats["humidity"] >= 80 else max(0, 100 - (80 - stats["humidity"]) * 2)
         grav_diff = abs(stats["gravity"] - 1.6)
-        grav_score = max(0, 100 - int(grav_diff * 30))
+        grav_score = max(0, int(grav_diff * 30))
 
     elif client_key == "astral_spirit":
         # 風使い: 常温（15〜30°C）、湿度は中程度、完全に無重力（0G）であること
