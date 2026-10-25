@@ -97,21 +97,43 @@ with col_client:
     """, unsafe_allow_html=True)
 
     st.subheader("🧰 家具カタログ")
-    selected_furniture = st.selectbox(
-        "配置するアイテムを選択",
-        options=list(FURNITURE_CATALOG.keys()),
-        format_func=lambda x: FURNITURE_CATALOG[x]['name']
+    
+    # 1. スタイルで絞り込むためのセレクトボックス
+    style_filter_options = ["すべて"] + list(STYLE_NAMES.keys())
+    selected_style = st.selectbox(
+        "スタイルで絞り込み",
+        options=style_filter_options,
+        format_func=lambda x: "すべて表示" if x == "すべて" else STYLE_NAMES[x]
     )
     
-    item_info = FURNITURE_CATALOG[selected_furniture]
-    if os.path.exists(item_info["image_path"]):
-        st.image(item_info["image_path"], use_container_width=True)
+    # 2. 選択されたスタイルに応じて家具のキーをフィルタリング
+    if selected_style == "すべて":
+        filtered_furniture_keys = list(FURNITURE_CATALOG.keys())
+    else:
+        filtered_furniture_keys = [
+            fid for fid, info in FURNITURE_CATALOG.items() 
+            if info["style"] == selected_style
+        ]
     
-    # ★スタイルの表示を追加
-    style_display = STYLE_NAMES.get(item_info["style"], item_info["style"])
-    st.markdown(f"**所属スタイル**: {style_display}")
+    # 3. 絞り込んだ家具リストがある場合のみセレクトボックスを表示
+    if filtered_furniture_keys:
+        selected_furniture = st.selectbox(
+            "配置するアイテムを選択",
+            options=filtered_furniture_keys,
+            format_func=lambda x: FURNITURE_CATALOG[x]['name']
+        )
+        
+        item_info = FURNITURE_CATALOG[selected_furniture]
+        if os.path.exists(item_info["image_path"]):
+            st.image(item_info["image_path"], use_container_width=True)
+        
+        style_display = STYLE_NAMES.get(item_info["style"], item_info["style"])
+        st.markdown(f"**所属スタイル**: {style_display}")
 
-    st.info(f"**{item_info['name']}**\n\nコスト: {item_info['cost']:,} Cr\n温度 {item_info['temp_delta']:+}°C | 湿度 {item_info['humidity_delta']:+}% | 重力 {item_info['gravity_delta']:+}G | 審美度 +{item_info['aesthetic']}")
+        st.info(f"**{item_info['name']}**\n\nコスト: {item_info['cost']:,} Cr\n温度 {item_info['temp_delta']:+}°C | 湿度 {item_info['humidity_delta']:+}% | 重力 {item_info['gravity_delta']:+}G | 審美度 +{item_info['aesthetic']}")
+    else:
+        st.warning("このスタイルに該当する家具はありません。")
+        selected_furniture = None
 # --- カラム2: 6x6 グリッド設計室 (画像配置対応) ---
 with col_grid:
     st.subheader("📐 6×6 空間デザイン設計")
