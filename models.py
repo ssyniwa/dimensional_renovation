@@ -1,5 +1,5 @@
 """
-異次元インテリア・リノベーション - ゲームロジックモジュール (種族別環境適応カスタム版)
+異次元インテリア・リノベーション - ゲームロジックモジュール (高得点調整・バグ修正版)
 """
 import os
 from data import CLIENT_TYPES, FURNITURE_CATALOG
@@ -45,42 +45,41 @@ def calculate_room_stats(placed_furniture_ids):
     }
 
 def evaluate_renovation(client_key, placed_furniture_ids):
-    """顧客の要求と現在の部屋構造から採点・レビューを判定 (種族別ロジック)"""
+    """顧客の要求と現在の部屋構造から採点・レビューを判定 (緩和・調整版)"""
     client = CLIENT_TYPES[client_key]
     stats = calculate_room_stats(placed_furniture_ids)
 
     # 1. 予算チェック
     budget_ok = stats["cost"] <= client["budget"]
     
-    # 2. 種族別の環境適応度計算カスタム分岐
+    # 2. 種族別の環境適応度計算（スコアが取りやすくなるよう緩和＆計算式修正）
     if client_key == "magma_dragon":
-        # 溶岩竜族: 高温であるほど良い（最低800°C）、湿度は低いほど良い、重力は重い方が落ち着く
-        temp_score = 100 if stats["temp"] >= 800 else max(0, 100 - (800 - stats["temp"]) // 2)
-        hum_score = 100 if stats["humidity"] <= 10 else max(0, 100 - (stats["humidity"] - 10) * 3)
+        # 溶岩竜族: 最低800°C以上をめざす。少し下でも減点をマイルドに
+        temp_score = 100 if stats["temp"] >= 750 else max(0, 100 - (750 - stats["temp"]) // 4)
+        hum_score = 100 if stats["humidity"] <= 20 else max(0, 100 - (stats["humidity"] - 20) * 2)
         grav_diff = abs(stats["gravity"] - 1.5)
-        grav_score = max(0, int(grav_diff * 40))
+        grav_score = max(0, 100 - int(grav_diff * 30))  # 修正：正しく減算式に修正
 
     elif client_key == "cyber_ai":
-        # 電脳AI: 極低温を好む（-100°C以下が理想）、湿度は完全ゼロ必須、重力は完全無重力(0G)が理想
-        temp_score = 100 if stats["temp"] <= -100 else max(0, 100 - (stats["temp"] - (-100)) // 2)
-        hum_score = 100 if stats["humidity"] == 0 else max(0, 100 - stats["humidity"] * 5)
-        grav_score = 100 if stats["gravity"] == 0.0 else max(0, 100 - int(stats["gravity"] * 100))
+        # 電脳AI: 極低温（-80°C以下で高得点）、完全ゼロ湿度、無重力
+        temp_score = 100 if stats["temp"] <= -80 else max(0, 100 - (stats["temp"] - (-80)) // 3)
+        hum_score = 100 if stats["humidity"] <= 5 else max(0, 100 - stats["humidity"] * 3)
+        grav_score = 100 if stats["gravity"] <= 0.2 else max(0, 100 - int(stats["gravity"] * 50))
 
     elif client_key == "deepsea_crystal":
-        # 深海結晶生命体: 水温は冷たい方が良い（-10°C以下）、湿度は超高湿度（80%以上）、高水圧（重力高め）を好む
-        temp_score = 100 if stats["temp"] <= -10 else max(0, 100 - (stats["temp"] - (-10)) // 2)
-        hum_score = 100 if stats["humidity"] >= 80 else max(0, 100 - (80 - stats["humidity"]) * 2)
-        grav_diff = abs(stats["gravity"] - 1.6)
-        grav_score = max(0, int(grav_diff * 30))
+        # 深海結晶生命体: 低温、高湿度、高水圧
+        temp_score = 100 if stats["temp"] <= 0 else max(0, 100 - stats["temp"] // 3)
+        hum_score = 100 if stats["humidity"] >= 70 else max(0, 100 - (70 - stats["humidity"]) * 2)
+        grav_diff = abs(stats["gravity"] - 1.5)
+        grav_score = max(0, 100 - int(grav_diff * 30))  # 修正：正しく減算式に修正
 
     elif client_key == "astral_spirit":
-        # 風使い: 常温（15〜30°C）、湿度は中程度、完全に無重力（0G）であること
-        temp_score = 100 if 15 <= stats["temp"] <= 30 else max(0, 100 - abs(stats["temp"] - 22) * 2)
-        hum_score = 100 if 30 <= stats["humidity"] <= 50 else max(0, 100 - abs(stats["humidity"] - 40) * 2)
-        grav_score = 100 if stats["gravity"] <= 0.1 else max(0, 100 - int(stats["gravity"] * 80))
+        # 風使い: 常温、中湿度、無重力
+        temp_score = 100 if 10 <= stats["temp"] <= 35 else max(0, 100 - abs(stats["temp"] - 22) * 3)
+        hum_score = 100 if 20 <= stats["humidity"] <= 60 else max(0, 100 - abs(stats["humidity"] - 40) * 2)
+        grav_score = 100 if stats["gravity"] <= 0.2 else max(0, 100 - int(stats["gravity"] * 50))
 
     else:
-        # フォールバック（汎用計算）
         temp_score = 100 if stats["temp"] >= client["min_temp"] else max(0, 100 - (client["min_temp"] - stats["temp"]) // 10)
         hum_score = 100 if stats["humidity"] <= client["max_humidity"] else max(0, 100 - (stats["humidity"] - client["max_humidity"]) * 2)
         grav_diff = abs(stats["gravity"] - client["target_gravity"])
@@ -88,28 +87,28 @@ def evaluate_renovation(client_key, placed_furniture_ids):
 
     env_score = (temp_score * 0.4) + (hum_score * 0.3) + (grav_score * 0.3)
 
-    # 3. 好みスタイルボーナス
+    # 3. 好みスタイルボーナス（ボーナス値を引き上げ）
     pref_style = client["preferred_style"]
     style_match_count = stats["style_counts"].get(pref_style, 0)
-    style_bonus = style_match_count * 12
+    style_bonus = style_match_count * 18
 
-    # 総合得点 (0 - 100)
-    final_score = int((env_score * 0.5) + (min(100, stats["aesthetic"] + style_bonus) * 0.5))
+    # 総合得点 (0 - 100) - 審美度やスタイルの影響を大きくして高得点を出しやすくする
+    final_score = int((env_score * 0.4) + (min(100, (stats["aesthetic"] * 1.2) + style_bonus) * 0.6))
     if not budget_ok:
-        final_score = max(0, final_score - 35)  # 予算オーバーペナルティ
+        final_score = max(0, final_score - 25)  # 予算オーバーのペナルティを軽減
 
     # ランク判定
-    if final_score >= 90:
+    if final_score >= 85:  # Sランクのハードルを少し緩和
         rank = "S"
-        reward = int(client["budget"] * 1.6)
+        reward = int(client["budget"] * 1.8)
         comment = "「驚異的だ！我が種の遺伝子レベルで安らぐ、完璧な次元空間を構築してくれた！」"
-    elif final_score >= 75:
+    elif final_score >= 70:  # Aランクのハードルを緩和
         rank = "A"
-        reward = client["budget"]
+        reward = int(client["budget"] * 1.2)
         comment = "「素晴らしい仕事だ。非常に快適で、同胞たちにもぜひ薦めたい設計だよ。」"
-    elif final_score >= 50:
+    elif final_score >= 45:
         rank = "B"
-        reward = int(client["budget"] * 0.7)
+        reward = int(client["budget"] * 0.8)
         comment = "「なんとか過ごせそうだが、いくつか環境の微調整が必要だな。次も頼む。」"
     else:
         rank = "D"
