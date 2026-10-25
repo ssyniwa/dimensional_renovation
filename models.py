@@ -93,7 +93,8 @@ def evaluate_renovation(client_key, placed_furniture_ids):
     style_bonus = style_match_count * 18
 
     # 総合得点 (0 - 100) - 審美度やスタイルの影響を大きくして高得点を出しやすくする
-    final_score = int((env_score * 0.4) + (min(100, (stats["aesthetic"] * 1.2) + style_bonus) * 0.6))
+    # 環境スコアのウェイトを下げ、お部屋のコーディネート（審美度・スタイル）の評価を重視する
+    final_score = int((env_score * 0.2) + (min(100, (stats["aesthetic"] * 1.5) + style_bonus) * 0.8))
     if not budget_ok:
         final_score = max(0, final_score - 25)  # 予算オーバーのペナルティを軽減
 
