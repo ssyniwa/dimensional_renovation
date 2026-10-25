@@ -31,7 +31,7 @@ CLIENT_TYPES = {
         "description": "高水圧と神秘的な静寂を愛する結晶体。水温管理と高い審美性を備えた空間を求めています。",
         "min_temp": -10,
         "max_humidity": 100,
-        "target_gravity": 1.0,
+        "target_gravity": 3.0,
         "budget": 750000,
         "preferred_style": "crystal_ocean",
         "avatar_image": "images/clients/deepsea_crystal.jpg"
