@@ -10,7 +10,7 @@ CLIENT_TYPES = {
         "min_temp": 800,
         "max_humidity": 10,
         "target_gravity": 1.5,
-        "budget": 60000,
+        "budget": 750000,
         "preferred_style": "industrial_magma",
         "avatar_image": "images/clients/magma_dragon.jpg"
     },
@@ -21,7 +21,7 @@ CLIENT_TYPES = {
         "min_temp": -100,
         "max_humidity": 0,
         "target_gravity": 0.0,
-        "budget": 85000,
+        "budget": 850000,
         "preferred_style": "cyberpunk_neon",
         "avatar_image": "images/clients/cyber_ai.jpg"
     },
@@ -32,7 +32,7 @@ CLIENT_TYPES = {
         "min_temp": -10,
         "max_humidity": 100,
         "target_gravity": 1.0,
-        "budget": 75000,
+        "budget": 750000,
         "preferred_style": "crystal_ocean",
         "avatar_image": "images/clients/deepsea_crystal.jpg"
     },
@@ -43,7 +43,7 @@ CLIENT_TYPES = {
         "min_temp": 15,
         "max_humidity": 40,
         "target_gravity": 0.0,
-        "budget": 50000,
+        "budget": 750000,
         "preferred_style": "astral_ether",
         "avatar_image": "images/clients/astral_spirit.jpg"
     }
