@@ -45,65 +45,62 @@ def calculate_room_stats(placed_furniture_ids):
     }
 
 def evaluate_renovation(client_key, placed_furniture_ids):
-    """顧客の要求と現在の部屋構造から採点・レビューを判定 (緩和・調整版)"""
+    """顧客の要求と現在のお部屋構造から採点・レビューを判定 (修正版)"""
     client = CLIENT_TYPES[client_key]
     stats = calculate_room_stats(placed_furniture_ids)
 
     # 1. 予算チェック
     budget_ok = stats["cost"] <= client["budget"]
     
-    # 2. 種族別の環境適応度計算（スコアが取りやすくなるよう緩和＆計算式修正）
+    # 2. 種族別の環境適応度計算
     if client_key == "magma_dragon":
-        # 溶岩竜族: 最低800°C以上をめざす。少し下でも減点をマイルドに
         temp_score = 100 if stats["temp"] >= 750 else max(0, 100 - (750 - stats["temp"]) // 4)
         hum_score = 100 if stats["humidity"] <= 20 else max(0, 100 - (stats["humidity"] - 20) * 2)
         grav_diff = abs(stats["gravity"] - 1.5)
-        grav_score = max(0, 100 - int(grav_diff * 30))  # 修正：正しく減算式に修正
+        grav_score = max(0, 100 - int(grav_diff * 20)) # 減点を少しマイルドに
 
     elif client_key == "cyber_ai":
-        # 電脳AI: 極低温（-80°C以下で高得点）、完全ゼロ湿度、無重力
         temp_score = 100 if stats["temp"] <= -80 else max(0, 100 - (stats["temp"] - (-80)) // 3)
         hum_score = 100 if stats["humidity"] <= 5 else max(0, 100 - stats["humidity"] * 3)
-        grav_score = 100 if stats["gravity"] <= 0.2 else max(0, 100 - int(stats["gravity"] * 50))
+        grav_score = 100 if stats["gravity"] <= 0.2 else max(0, 100 - int(stats["gravity"] * 40))
 
     elif client_key == "deepsea_crystal":
-        # 深海結晶生命体: 低温、高湿度、高水圧
         temp_score = 100 if stats["temp"] <= 0 else max(0, 100 - stats["temp"] // 3)
         hum_score = 100 if stats["humidity"] >= 70 else max(0, 100 - (70 - stats["humidity"]) * 2)
         grav_diff = abs(stats["gravity"] - 1.5)
-        grav_score = max(0, 100 - int(grav_diff * 30))  # 修正：正しく減算式に修正
+        grav_score = max(0, 100 - int(grav_diff * 20))
 
     elif client_key == "astral_spirit":
-        # 風使い: 常温、中湿度、無重力
         temp_score = 100 if 10 <= stats["temp"] <= 35 else max(0, 100 - abs(stats["temp"] - 22) * 3)
         hum_score = 100 if 20 <= stats["humidity"] <= 60 else max(0, 100 - abs(stats["humidity"] - 40) * 2)
-        grav_score = 100 if stats["gravity"] <= 0.2 else max(0, 100 - int(stats["gravity"] * 50))
+        grav_score = 100 if stats["gravity"] <= 0.2 else max(0, 100 - int(stats["gravity"] * 40))
 
     else:
         temp_score = 100 if stats["temp"] >= client["min_temp"] else max(0, 100 - (client["min_temp"] - stats["temp"]) // 10)
         hum_score = 100 if stats["humidity"] <= client["max_humidity"] else max(0, 100 - (stats["humidity"] - client["max_humidity"]) * 2)
         grav_diff = abs(stats["gravity"] - client["target_gravity"])
-        grav_score = max(0, 100 - int(grav_diff * 50))
+        grav_score = max(0, 100 - int(grav_diff * 40))
 
     env_score = (temp_score * 0.4) + (hum_score * 0.3) + (grav_score * 0.3)
 
-    # 3. 好みスタイルボーナス（ボーナス値を引き上げ）
+    # 3. 好みスタイルボーナス
     pref_style = client["preferred_style"]
     style_match_count = stats["style_counts"].get(pref_style, 0)
-    style_bonus = style_match_count * 18
+    style_bonus = style_match_count * 15
 
-    # 総合得点 (0 - 100) - 審美度やスタイルの影響を大きくして高得点を出しやすくする
-    # 環境スコアのウェイトを下げ、お部屋のコーディネート（審美度・スタイル）の評価を重視する
-    final_score = int((env_score * 0.2) + (min(100, (stats["aesthetic"] * 1.5) + style_bonus) * 0.8))
+    # ★【修正ポイント】総合得点の計算：審美度・スタイルがしっかり点数に反映されるように調整
+    aesthetic_total = min(100, (stats["aesthetic"] * 0.8) + style_bonus)
+    final_score = int((env_score * 0.3) + (aesthetic_total * 0.7))
+    
     if not budget_ok:
-        final_score = max(0, final_score - 25)  # 予算オーバーのペナルティを軽減
+        final_score = max(0, final_score - 20)  # ペナルティを少し軽減
 
-    # ランク判定
-    if final_score >= 85:  # Sランクのハードルを少し緩和
+    # ランク判定（85点以上でSランクに届くように）
+    if final_score >= 85:
         rank = "S"
         reward = int(client["budget"] * 1.8)
         comment = "「驚異的だ！我が種の遺伝子レベルで安らぐ、完璧な次元空間を構築してくれた！」"
-    elif final_score >= 70:  # Aランクのハードルを緩和
+    elif final_score >= 70:
         rank = "A"
         reward = int(client["budget"] * 1.2)
         comment = "「素晴らしい仕事だ。非常に快適で、同胞たちにもぜひ薦めたい設計だよ。」"
@@ -124,4 +121,3 @@ def evaluate_renovation(client_key, placed_furniture_ids):
         "stats": stats,
         "budget_ok": budget_ok
     }
-
