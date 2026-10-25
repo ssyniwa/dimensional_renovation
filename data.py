@@ -1,5 +1,5 @@
 """
-異次元インテリア・リノベーション - ゲームデータモジュール (画像パス対応版)
+異次元インテリア・リノベーション - ゲームデータモジュール (家具数値・高得点調整版)
 """
 
 CLIENT_TYPES = {
@@ -54,10 +54,10 @@ FURNITURE_CATALOG = {
         "name": "耐熱マグマタイル",
         "category": "床・壁",
         "cost": 8000,
-        "temp_delta": 300,
-        "humidity_delta": -20,
-        "gravity_delta": 0.0,
-        "aesthetic": 15,
+        "temp_delta": 250,  # 調整
+        "humidity_delta": -15,
+        "gravity_delta": 0.2,
+        "aesthetic": 20,
         "style": "industrial_magma",
         "image_path": "images/furniture/magma_floor.jpg"
     },
@@ -65,10 +65,10 @@ FURNITURE_CATALOG = {
         "name": "超伝導冷却パネル",
         "category": "床・壁",
         "cost": 12000,
-        "temp_delta": -45,
-        "humidity_delta": -30,
+        "temp_delta": -150,  # 調整：冷却力を強化
+        "humidity_delta": -20,
         "gravity_delta": 0.0,
-        "aesthetic": 20,
+        "aesthetic": 25,
         "style": "cyberpunk_neon",
         "image_path": "images/furniture/cool_panel.jpg"
     },
@@ -76,10 +76,10 @@ FURNITURE_CATALOG = {
         "name": "深海高圧ウォータープール",
         "category": "水質・環境",
         "cost": 15000,
-        "temp_delta": -5,
-        "humidity_delta": 60,
-        "gravity_delta": 0.3,
-        "aesthetic": 30,
+        "temp_delta": -40,
+        "humidity_delta": 40,
+        "gravity_delta": 0.2,
+        "aesthetic": 35,
         "style": "crystal_ocean",
         "image_path": "images/furniture/crystal_pool.jpg"
     },
@@ -89,8 +89,8 @@ FURNITURE_CATALOG = {
         "cost": 18000,
         "temp_delta": 0,
         "humidity_delta": 0,
-        "gravity_delta": -1.0,
-        "aesthetic": 25,
+        "gravity_delta": -0.5,
+        "aesthetic": 30,
         "style": "astral_ether",
         "image_path": "images/furniture/zerog_field.jpg"
     },
@@ -98,10 +98,10 @@ FURNITURE_CATALOG = {
         "name": "反物質暖炉",
         "category": "大型家具",
         "cost": 22000,
-        "temp_delta": 800,
-        "humidity_delta": -40,
+        "temp_delta": 400,  # 調整
+        "humidity_delta": -30,
         "gravity_delta": 0.1,
-        "aesthetic": 45,
+        "aesthetic": 50,
         "style": "industrial_magma",
         "image_path": "images/furniture/dark_fireplace.jpg"
     },
@@ -109,10 +109,10 @@ FURNITURE_CATALOG = {
         "name": "量子データ同期ソファ",
         "category": "家具",
         "cost": 14000,
-        "temp_delta": -2,
+        "temp_delta": -20,
         "humidity_delta": 0,
         "gravity_delta": 0.0,
-        "aesthetic": 35,
+        "aesthetic": 40,
         "style": "cyberpunk_neon",
         "image_path": "images/furniture/data_sofa.jpg"
     },
@@ -123,7 +123,7 @@ FURNITURE_CATALOG = {
         "temp_delta": 0,
         "humidity_delta": 10,
         "gravity_delta": 0.0,
-        "aesthetic": 40,
+        "aesthetic": 45,
         "style": "crystal_ocean",
         "image_path": "images/furniture/biolum_plant.jpg"
     },
@@ -131,10 +131,10 @@ FURNITURE_CATALOG = {
         "name": "エーテル気流シャンデリア",
         "category": "照明",
         "cost": 11000,
-        "temp_delta": 10,
+        "temp_delta": 0,
         "humidity_delta": 0,
         "gravity_delta": -0.2,
-        "aesthetic": 50,
+        "aesthetic": 55,
         "style": "astral_ether",
         "image_path": "images/furniture/ether_chandelier.jpg"
     },
@@ -144,10 +144,10 @@ FURNITURE_CATALOG = {
         "name": "超高圧プラズマ溶鉱炉",
         "category": "大型家具",
         "cost": 28000,
-        "temp_delta": 1000,
-        "humidity_delta": -50,
-        "gravity_delta": 0.1,
-        "aesthetic": 55,
+        "temp_delta": 500,  # 調整
+        "humidity_delta": -40,
+        "gravity_delta": 0.2,
+        "aesthetic": 65,
         "style": "industrial_magma",
         "image_path": "images/furniture/plasma_forge.jpg"
     },
@@ -155,10 +155,10 @@ FURNITURE_CATALOG = {
         "name": "液体金属防壁パネル",
         "category": "床・壁",
         "cost": 16000,
-        "temp_delta": 200,
+        "temp_delta": 150,
         "humidity_delta": -10,
         "gravity_delta": 0.0,
-        "aesthetic": 30,
+        "aesthetic": 35,
         "style": "industrial_magma",
         "image_path": "images/furniture/liquid_metal_wall.jpg"
     },
@@ -166,10 +166,10 @@ FURNITURE_CATALOG = {
         "name": "ネオン・マトリクス・ウォール",
         "category": "装飾・壁",
         "cost": 13000,
-        "temp_delta": -10,
+        "temp_delta": -50,
         "humidity_delta": -10,
         "gravity_delta": 0.0,
-        "aesthetic": 45,
+        "aesthetic": 50,
         "style": "cyberpunk_neon",
         "image_path": "images/furniture/neon_matrix_display.jpg"
     },
@@ -177,10 +177,10 @@ FURNITURE_CATALOG = {
         "name": "極低温コールドスリープポッド",
         "category": "大型家具",
         "cost": 25000,
-        "temp_delta": -60,
+        "temp_delta": -250,  # 調整：冷却の切り札に
         "humidity_delta": -20,
         "gravity_delta": 0.0,
-        "aesthetic": 60,
+        "aesthetic": 70,
         "style": "cyberpunk_neon",
         "image_path": "images/furniture/cryo_sleep_pod.jpg"
     },
@@ -188,10 +188,10 @@ FURNITURE_CATALOG = {
         "name": "深海圧搾ハイドロピラー",
         "category": "環境装置",
         "cost": 19000,
-        "temp_delta": -8,
-        "humidity_delta": 80,
-        "gravity_delta": 0.6,
-        "aesthetic": 40,
+        "temp_delta": -30,
+        "humidity_delta": 50,
+        "gravity_delta": 0.4,
+        "aesthetic": 45,
         "style": "crystal_ocean",
         "image_path": "images/furniture/abyssal_hydro_pillar.jpg"
     },
@@ -200,9 +200,9 @@ FURNITURE_CATALOG = {
         "category": "照明",
         "cost": 10500,
         "temp_delta": 0,
-        "humidity_delta": 30,
-        "gravity_delta": 0.1,
-        "aesthetic": 50,
+        "humidity_delta": 25,
+        "gravity_delta": 0.0,
+        "aesthetic": 55,
         "style": "crystal_ocean",
         "image_path": "images/furniture/coral_prism.jpg"
     },
@@ -212,8 +212,8 @@ FURNITURE_CATALOG = {
         "cost": 21000,
         "temp_delta": 0,
         "humidity_delta": 0,
-        "gravity_delta": -0.8,
-        "aesthetic": 55,
+        "gravity_delta": -0.6,
+        "aesthetic": 60,
         "style": "astral_ether",
         "image_path": "images/furniture/antigrav_floating_ring.jpg"
     },
@@ -221,10 +221,10 @@ FURNITURE_CATALOG = {
         "name": "星間微風のエーテルハープ",
         "category": "装飾品",
         "cost": 12500,
-        "temp_delta": 5,
+        "temp_delta": 0,
         "humidity_delta": 10,
-        "gravity_delta": -0.3,
-        "aesthetic": 65,
+        "gravity_delta": -0.2,
+        "aesthetic": 75,  # 審美度を高めに設定
         "style": "astral_ether",
         "image_path": "images/furniture/stellar_wind_harp.jpg"
     }
