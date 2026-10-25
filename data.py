@@ -229,7 +229,7 @@ FURNITURE_CATALOG = {
         "aesthetic": 75,  # 審美度を高めに設定
         "style": "astral_ether",
         "image_path": "images/furniture/stellar_wind_harp.jpg"
-    }
+    },
     # ==========================================
     # 1. 工業・マグマ風スタイル (industrial_magma) [8種類]
     # ==========================================
