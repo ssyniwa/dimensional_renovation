@@ -89,6 +89,8 @@ def evaluate_renovation(client_key, placed_furniture_ids):
     style_bonus = style_match_count * 15
 
     # ★【修正ポイント】総合得点の計算：審美度・スタイルがしっかり点数に反映されるように調整
+    # 総合得点 (0 - 100)
+    # 環境スコアのウェイトを30%に下げ、インテリア（審美度・スタイル）のウェイトを70%に引き上げます
     aesthetic_total = min(100, (stats["aesthetic"] * 0.8) + style_bonus)
     final_score = int((env_score * 0.3) + (aesthetic_total * 0.7))
     
