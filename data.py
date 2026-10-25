@@ -141,7 +141,95 @@ FURNITURE_CATALOG = {
         "style": "astral_ether",
         "image_path": "images/furniture/ether_chandelier.jpg"
     },
-
+# --- 新規追加の家具 (8種類) ---
+    "f_plasma_forge": {
+        "name": "超高圧プラズマ溶鉱炉",
+        "category": "大型家具",
+        "cost": 28000,
+        "temp_delta": 500,  # 調整
+        "humidity_delta": -40,
+        "gravity_delta": 0.2,
+        "aesthetic": 65,
+        "style": "industrial_magma",
+        "image_path": "images/furniture/plasma_forge.jpg"
+    },
+    "f_liquid_metal_wall": {
+        "name": "液体金属防壁パネル",
+        "category": "床・壁",
+        "cost": 16000,
+        "temp_delta": 150,
+        "humidity_delta": -10,
+        "gravity_delta": 0.0,
+        "aesthetic": 35,
+        "style": "industrial_magma",
+        "image_path": "images/furniture/liquid_metal_wall.jpg"
+    },
+    "f_neon_matrix_display": {
+        "name": "ネオン・マトリクス・ウォール",
+        "category": "装飾・壁",
+        "cost": 13000,
+        "temp_delta": -50,
+        "humidity_delta": -10,
+        "gravity_delta": 0.0,
+        "aesthetic": 50,
+        "style": "cyberpunk_neon",
+        "image_path": "images/furniture/neon_matrix_display.jpg"
+    },
+    "f_cryo_sleep_pod": {
+        "name": "極低温コールドスリープポッド",
+        "category": "大型家具",
+        "cost": 25000,
+        "temp_delta": -250,  # 調整：冷却の切り札に
+        "humidity_delta": -20,
+        "gravity_delta": 0.0,
+        "aesthetic": 70,
+        "style": "cyberpunk_neon",
+        "image_path": "images/furniture/cryo_sleep_pod.jpg"
+    },
+    "f_abyssal_hydro_pillar": {
+        "name": "深海圧搾ハイドロピラー",
+        "category": "環境装置",
+        "cost": 19000,
+        "temp_delta": -30,
+        "humidity_delta": 50,
+        "gravity_delta": 0.4,
+        "aesthetic": 45,
+        "style": "crystal_ocean",
+        "image_path": "images/furniture/abyssal_hydro_pillar.jpg"
+    },
+    "f_coral_prism": {
+        "name": "虹彩発光コーラルプリズム",
+        "category": "照明",
+        "cost": 10500,
+        "temp_delta": 0,
+        "humidity_delta": 25,
+        "gravity_delta": 0.0,
+        "aesthetic": 55,
+        "style": "crystal_ocean",
+        "image_path": "images/furniture/coral_prism.jpg"
+    },
+    "f_antigrav_floating_ring": {
+        "name": "反重力フローティングリング",
+        "category": "大型家具",
+        "cost": 21000,
+        "temp_delta": 0,
+        "humidity_delta": 0,
+        "gravity_delta": -0.6,
+        "aesthetic": 60,
+        "style": "astral_ether",
+        "image_path": "images/furniture/antigrav_floating_ring.jpg"
+    },
+    "f_stellar_wind_harp": {
+        "name": "星間微風のエーテルハープ",
+        "category": "装飾品",
+        "cost": 12500,
+        "temp_delta": 0,
+        "humidity_delta": 10,
+        "gravity_delta": -0.2,
+        "aesthetic": 75,  # 審美度を高めに設定
+        "style": "astral_ether",
+        "image_path": "images/furniture/stellar_wind_harp.jpg"
+    }
     # ==========================================
     # 1. 工業・マグマ風スタイル (industrial_magma) [8種類]
     # ==========================================
