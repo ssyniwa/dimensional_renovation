@@ -79,39 +79,39 @@ st.caption("マルチバースの異世界顧客に向けた、理想の次元�
 col_client, col_grid, col_stats = st.columns([0.7, 2.0, 0.7])
 
 # --- カラム1: クライアント情報 & 家具カタログ ---
-    with col_client:
-        st.subheader("👤 クライアント要件")
-        if os.path.exists(client["avatar_image"]):
-            st.image(client["avatar_image"], use_container_width=True)
-        st.markdown(f"""
-        <div class="client-card">
-            <h3>{client['name']}</h3>
-            <p><b>{client['title']}</b></p>
-            <p>{client['description']}</p>
-            <hr style="border-color:#30363d;">
-            <p>💰 <b>予算:</b> {client['budget']:,} Cr</p>
-            <p>🔥 <b>必須最低温度:</b> {client['min_temp']}°C 以上</p>
-            <p>💧 <b>許容最大湿度:</b> {client['max_humidity']}% 以下</p>
-            <p>🌌 <b>目標重力:</b> {client['target_gravity']} G</p>
-        </div>
-        """, unsafe_allow_html=True)
+with col_client:
+    st.subheader("👤 クライアント要件")
+    if os.path.exists(client["avatar_image"]):
+        st.image(client["avatar_image"], use_container_width=True)
+    st.markdown(f"""
+    <div class="client-card">
+        <h3>{client['name']}</h3>
+        <p><b>{client['title']}</b></p>
+        <p>{client['description']}</p>
+        <hr style="border-color:#30363d;">
+        <p>💰 <b>予算:</b> {client['budget']:,} Cr</p>
+        <p>🔥 <b>必須最低温度:</b> {client['min_temp']}°C 以上</p>
+        <p>💧 <b>許容最大湿度:</b> {client['max_humidity']}% 以下</p>
+        <p>🌌 <b>目標重力:</b> {client['target_gravity']} G</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-        st.subheader("🧰 家具カタログ")
-        selected_furniture = st.selectbox(
-            "配置するアイテムを選択",
-            options=list(FURNITURE_CATALOG.keys()),
-            format_func=lambda x: FURNITURE_CATALOG[x]['name']
-        )
-        
-        item_info = FURNITURE_CATALOG[selected_furniture]
-        if os.path.exists(item_info["image_path"]):
-            st.image(item_info["image_path"], use_container_width=True)
-        
-        # ★スタイルの表示を追加
-        style_display = STYLE_NAMES.get(item_info["style"], item_info["style"])
-        st.markdown(f"**所属スタイル**: {style_display}")
+    st.subheader("🧰 家具カタログ")
+    selected_furniture = st.selectbox(
+        "配置するアイテムを選択",
+        options=list(FURNITURE_CATALOG.keys()),
+        format_func=lambda x: FURNITURE_CATALOG[x]['name']
+    )
+    
+    item_info = FURNITURE_CATALOG[selected_furniture]
+    if os.path.exists(item_info["image_path"]):
+        st.image(item_info["image_path"], use_container_width=True)
+    
+    # ★スタイルの表示を追加
+    style_display = STYLE_NAMES.get(item_info["style"], item_info["style"])
+    st.markdown(f"**所属スタイル**: {style_display}")
 
-        st.info(f"**{item_info['name']}**\n\nコスト: {item_info['cost']:,} Cr\n温度 {item_info['temp_delta']:+}°C | 湿度 {item_info['humidity_delta']:+}% | 重力 {item_info['gravity_delta']:+}G | 審美度 +{item_info['aesthetic']}")
+    st.info(f"**{item_info['name']}**\n\nコスト: {item_info['cost']:,} Cr\n温度 {item_info['temp_delta']:+}°C | 湿度 {item_info['humidity_delta']:+}% | 重力 {item_info['gravity_delta']:+}G | 審美度 +{item_info['aesthetic']}")
 # --- カラム2: 6x6 グリッド設計室 (画像配置対応) ---
 with col_grid:
     st.subheader("📐 6×6 空間デザイン設計")
