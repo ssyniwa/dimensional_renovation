@@ -67,7 +67,7 @@ def evaluate_renovation(client_key, placed_furniture_ids):
     elif client_key == "deepsea_crystal":
         temp_score = 100 if stats["temp"] <= 0 else max(0, 100 - stats["temp"] // 3)
         hum_score = 100 if stats["humidity"] >= 70 else max(0, 100 - (70 - stats["humidity"]) * 2)
-        grav_diff = abs(stats["gravity"] - 1.5)
+        grav_diff = abs(stats["gravity"] - 3.0)
         grav_score = max(0, 100 - int(grav_diff * 20))
 
     elif client_key == "astral_spirit":
