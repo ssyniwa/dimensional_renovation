@@ -147,12 +147,12 @@ FURNITURE_CATALOG = {
     # ==========================================
     "f_magma_desk": {
         "name": "重金属製マグマデスク", "category": "机", "cost": 10000,
-        "temp_delta": 150, "humidity_delta": -10, "gravity_delta": 0.1, "aesthetic": 25,
+        "temp_delta": 150, "humidity_delta": -10, "gravity_delta": 0.0, "aesthetic": 25,
         "style": "industrial_magma", "image_path": "images/furniture/magma_desk.jpg"
     },
     "f_magma_chair": {
         "name": "耐熱ハードアロイチェア", "category": "椅子", "cost": 7000,
-        "temp_delta": 100, "humidity_delta": -5, "gravity_delta": 0.1, "aesthetic": 20,
+        "temp_delta": 100, "humidity_delta": -5, "gravity_delta": 0.0, "aesthetic": 20,
         "style": "industrial_magma", "image_path": "images/furniture/magma_chair.jpg"
     },
     "f_magma_heater": {
@@ -162,12 +162,12 @@ FURNITURE_CATALOG = {
     },
     "f_magma_bed": {
         "name": "溶岩床カプセルベッド", "category": "ベッド", "cost": 20000,
-        "temp_delta": 250, "humidity_delta": -15, "gravity_delta": 0.2, "aesthetic": 40,
+        "temp_delta": 250, "humidity_delta": -15, "gravity_delta": 0.0, "aesthetic": 40,
         "style": "industrial_magma", "image_path": "images/furniture/magma_bed.jpg"
     },
     "f_magma_rack": {
         "name": "アーマー収納ラック", "category": "ラック", "cost": 12000,
-        "temp_delta": 120, "humidity_delta": -10, "gravity_delta": 0.1, "aesthetic": 35,
+        "temp_delta": 120, "humidity_delta": -10, "gravity_delta": 0.0, "aesthetic": 35,
         "style": "industrial_magma", "image_path": "images/furniture/magma_rack.jpg"
     },
     "f_magma_clock": {
@@ -177,12 +177,12 @@ FURNITURE_CATALOG = {
     },
     "f_magma_bath": {
         "name": "溶岩流スパ・バス", "category": "風呂", "cost": 25000,
-        "temp_delta": 500, "humidity_delta": -25, "gravity_delta": 0.3, "aesthetic": 60,
+        "temp_delta": 500, "humidity_delta": -25, "gravity_delta": 0.0, "aesthetic": 60,
         "style": "industrial_magma", "image_path": "images/furniture/magma_bath.jpg"
     },
     "f_magma_kitchen": {
         "name": "プラズマ溶鉱キッチン", "category": "キッチン", "cost": 22000,
-        "temp_delta": 350, "humidity_delta": -20, "gravity_delta": 0.1, "aesthetic": 50,
+        "temp_delta": 350, "humidity_delta": -20, "gravity_delta": 0.0, "aesthetic": 50,
         "style": "industrial_magma", "image_path": "images/furniture/magma_kitchen.jpg"
     },
 
@@ -196,7 +196,7 @@ FURNITURE_CATALOG = {
     },
     "f_cyber_chair": {
         "name": "ゼログラビティ・コクピットチェア", "category": "椅子", "cost": 9000,
-        "temp_delta": -20, "humidity_delta": -5, "gravity_delta": -0.1, "aesthetic": 25,
+        "temp_delta": -20, "humidity_delta": -5, "gravity_delta": 0.0, "aesthetic": 25,
         "style": "cyberpunk_neon", "image_path": "images/furniture/cyber_chair.jpg"
     },
     "f_cyber_heater": {
@@ -206,7 +206,7 @@ FURNITURE_CATALOG = {
     },
     "f_cyber_bed": {
         "name": "データ同期型スリーピングポッド", "category": "ベッド", "cost": 22000,
-        "temp_delta": -80, "humidity_delta": -20, "gravity_delta": -0.2, "aesthetic": 50,
+        "temp_delta": -80, "humidity_delta": -20, "gravity_delta": 0.0, "aesthetic": 50,
         "style": "cyberpunk_neon", "image_path": "images/furniture/cyber_bed.jpg"
     },
     "f_cyber_rack": {
@@ -221,7 +221,7 @@ FURNITURE_CATALOG = {
     },
     "f_cyber_bath": {
         "name": "データトランス・バス", "category": "風呂", "cost": 24000,
-        "temp_delta": -120, "humidity_delta": 0, "gravity_delta": -0.3, "aesthetic": 65,
+        "temp_delta": -120, "humidity_delta": 0, "gravity_delta": 0.0, "aesthetic": 65,
         "style": "cyberpunk_neon", "image_path": "images/furniture/cyber_bath.jpg"
     },
     "f_cyber_kitchen": {
@@ -235,42 +235,42 @@ FURNITURE_CATALOG = {
     # ==========================================
     "f_crystal_desk": {
         "name": "深海石灰岩のクリアデスク", "category": "机", "cost": 11000,
-        "temp_delta": -10, "humidity_delta": 20, "gravity_delta": 0.2, "aesthetic": 30,
+        "temp_delta": -10, "humidity_delta": 20, "gravity_delta": 0.0, "aesthetic": 30,
         "style": "crystal_ocean", "image_path": "images/furniture/crystal_desk.jpg"
     },
     "f_crystal_chair": {
         "name": "流体モールドシェルチェア", "category": "椅子", "cost": 8000,
-        "temp_delta": -10, "humidity_delta": 15, "gravity_delta": 0.1, "aesthetic": 25,
+        "temp_delta": -10, "humidity_delta": 15, "gravity_delta": 0.0, "aesthetic": 25,
         "style": "crystal_ocean", "image_path": "images/furniture/crystal_chair.jpg"
     },
     "f_crystal_heater": {
         "name": "高圧スチーム・ウォーターヒーター", "category": "湯沸かし器", "cost": 16000,
-        "temp_delta": 20, "humidity_delta": 30, "gravity_delta": 0.2, "aesthetic": 35,
+        "temp_delta": 20, "humidity_delta": 30, "gravity_delta": 0.0, "aesthetic": 35,
         "style": "crystal_ocean", "image_path": "images/furniture/crystal_heater.jpg"
     },
     "f_crystal_bed": {
         "name": "クリスタル・ウォーターベッド", "category": "ベッド", "cost": 21000,
-        "temp_delta": -20, "humidity_delta": 40, "gravity_delta": 0.3, "aesthetic": 55,
+        "temp_delta": -20, "humidity_delta": 40, "gravity_delta": 0.0, "aesthetic": 55,
         "style": "crystal_ocean", "image_path": "images/furniture/crystal_bed.jpg"
     },
     "f_crystal_rack": {
         "name": "鉱石・シェル収納ラック", "category": "ラック", "cost": 13000,
-        "temp_delta": -15, "humidity_delta": 25, "gravity_delta": 0.2, "aesthetic": 40,
+        "temp_delta": -15, "humidity_delta": 25, "gravity_delta": 0.0, "aesthetic": 40,
         "style": "crystal_ocean", "image_path": "images/furniture/crystal_rack.jpg"
     },
     "f_crystal_clock": {
         "name": "潮汐連動ウォータークロック", "category": "時計", "cost": 9500,
-        "temp_delta": -5, "humidity_delta": 15, "gravity_delta": 0.1, "aesthetic": 50,
+        "temp_delta": -5, "humidity_delta": 15, "gravity_delta": 0.0, "aesthetic": 50,
         "style": "crystal_ocean", "image_path": "images/furniture/crystal_clock.jpg"
     },
     "f_crystal_bath": {
         "name": "アビス・高圧ハイドロバス", "category": "風呂", "cost": 26000,
-        "temp_delta": -30, "humidity_delta": 70, "gravity_delta": 0.5, "aesthetic": 70,
+        "temp_delta": -30, "humidity_delta": 70, "gravity_delta": 0.0, "aesthetic": 70,
         "style": "crystal_ocean", "image_path": "images/furniture/crystal_bath.jpg"
     },
     "f_crystal_kitchen": {
         "name": "ディープシー・アクアキッチン", "category": "キッチン", "cost": 21000,
-        "temp_delta": -15, "humidity_delta": 35, "gravity_delta": 0.3, "aesthetic": 55,
+        "temp_delta": -15, "humidity_delta": 35, "gravity_delta": 0.0, "aesthetic": 55,
         "style": "crystal_ocean", "image_path": "images/furniture/crystal_kitchen.jpg"
     },
 
@@ -279,42 +279,42 @@ FURNITURE_CATALOG = {
     # ==========================================
     "f_ether_desk": {
         "name": "レヴィテーション・エーテルデスク", "category": "机", "cost": 13000,
-        "temp_delta": 0, "humidity_delta": 0, "gravity_delta": -0.3, "aesthetic": 40,
+        "temp_delta": 0, "humidity_delta": 0, "gravity_delta": 0.0, "aesthetic": 40,
         "style": "astral_ether", "image_path": "images/furniture/ether_desk.jpg"
     },
     "f_ether_chair": {
         "name": "フローティング・エーテルチェア", "category": "椅子", "cost": 10000,
-        "temp_delta": 0, "humidity_delta": 0, "gravity_delta": -0.2, "aesthetic": 35,
+        "temp_delta": 0, "humidity_delta": 0, "gravity_delta": 0.0, "aesthetic": 35,
         "style": "astral_ether", "image_path": "images/furniture/ether_chair.jpg"
     },
     "f_ether_heater": {
         "name": "星間エーテル・サーモヒーター", "category": "湯沸かし器", "cost": 17000,
-        "temp_delta": 30, "humidity_delta": 5, "gravity_delta": -0.2, "aesthetic": 40,
+        "temp_delta": 30, "humidity_delta": 5, "gravity_delta": 0.0, "aesthetic": 40,
         "style": "astral_ether", "image_path": "images/furniture/ether_heater.jpg"
     },
     "f_ether_bed": {
         "name": "ゼロG・フローティングベッド", "category": "ベッド", "cost": 23000,
-        "temp_delta": 5, "humidity_delta": 0, "gravity_delta": -0.5, "aesthetic": 60,
+        "temp_delta": 5, "humidity_delta": 0, "gravity_delta": 0.0, "aesthetic": 60,
         "style": "astral_ether", "image_path": "images/furniture/ether_bed.jpg"
     },
     "f_ether_rack": {
         "name": "次元回廊サスペンドラック", "category": "ラック", "cost": 14000,
-        "temp_delta": 0, "humidity_delta": 0, "gravity_delta": -0.3, "aesthetic": 45,
+        "temp_delta": 0, "humidity_delta": 0, "gravity_delta": 0.0, "aesthetic": 45,
         "style": "astral_ether", "image_path": "images/furniture/ether_rack.jpg"
     },
     "f_ether_clock": {
         "name": "アストラル・クロノメーター", "category": "時計", "cost": 11000,
-        "temp_delta": 0, "humidity_delta": 0, "gravity_delta": -0.2, "aesthetic": 60,
+        "temp_delta": 0, "humidity_delta": 0, "gravity_delta": 0.0, "aesthetic": 60,
         "style": "astral_ether", "image_path": "images/furniture/ether_clock.jpg"
     },
     "f_ether_bath": {
         "name": "ゼロG・エーテルミストバス", "category": "風呂", "cost": 27000,
-        "temp_delta": 10, "humidity_delta": 15, "gravity_delta": -0.6, "aesthetic": 75,
+        "temp_delta": 10, "humidity_delta": 15, "gravity_delta": 0.0, "aesthetic": 75,
         "style": "astral_ether", "image_path": "images/furniture/ether_bath.jpg"
     },
     "f_ether_kitchen": {
         "name": "エーテル気流モレキュラーキッチン", "category": "キッチン", "cost": 22000,
-        "temp_delta": 10, "humidity_delta": 10, "gravity_delta": -0.3, "aesthetic": 60,
+        "temp_delta": 10, "humidity_delta": 10, "gravity_delta": 0.0, "aesthetic": 60,
         "style": "astral_ether", "image_path": "images/furniture/ether_kitchen.jpg"
     }
 }
