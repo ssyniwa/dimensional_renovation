@@ -145,18 +145,18 @@ with col_client:
     status_badge = "<p style='color: #3fb950; font-weight: bold;'>【 依頼達成済み (Rank A以上) 】</p>" if st.session_state.completed_clients[st.session_state.current_client] else ""
     
     st.markdown(f"""
-    <div class="client-card">
-        <h3>{client['name']}</h3>
-        {status_badge}
-        <p><b>{client['title']}</b></p>
-        <p>{client['description']}</p>
-        <hr style="border-color:#30363d;">
-        <p>💰 <b>予算:</b> {client['budget']:,} Cr</p>
-        <p>🔥 <b>必須最低温度:</b> {client['min_temp']}°C 以上</p>
-        <p>💧 <b>許容最大湿度:</b> {client['max_humidity']}% 以下</p>
-        <p>🌌 <b>目標重力:</b> {client['target_gravity']} G</p>
-    </div>
-    """, unsafe_allow_html=True)
+        <div class="client-card">
+            <h3>{client['name']}</h3>
+            {status_badge}
+            <p><b>{client['title']}</b></p>
+            <p>{client['description']}</p>
+            <hr style="border-color:#30363d;">
+            <p>💰 <b>予算:</b> {client['budget']:,} Cr</p>
+            <p>🔥 <b>必須最低温度:</b> {client['min_temp']}°C 以上</p>
+            <p>💧 <b>許容最大湿度:</b> {client['max_humidity']}% 以下</p>
+            <p>🌌 <b>目標重力:</b> {client['target_gravity']} G</p>
+        </div>
+        """, unsafe_allow_html=True)
 
 # --- カラム2: 6x6 グリッド設計室 ---
 with col_grid:
