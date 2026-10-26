@@ -1,10 +1,11 @@
 """
-『異次元インテリア・リノベーション』 Main Streamlit Application (グリッド画像配置対応版)
+『異次元インテリア・リノベーション』 Main Streamlit Application (レイアウト最適化版)
 """
 import os
 import streamlit as st
 from data import CLIENT_TYPES, FURNITURE_CATALOG
 from models import calculate_room_stats, evaluate_renovation
+
 # スタイルの日本語名マッピング
 STYLE_NAMES = {
     "industrial_magma": "🔥 工業・マグマ風 (溶岩竜族向け)",
@@ -12,6 +13,7 @@ STYLE_NAMES = {
     "crystal_ocean": "💎 深海・クリスタル風 (深海生命体向け)",
     "astral_ether": "🌌 次元・エーテル風 (風使い向け)"
 }
+
 # ページ基本設定
 st.set_page_config(
     page_title="異次元インテリア・リノベーション",
@@ -20,17 +22,24 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# カスタムCSS
+# カスタムCSSによるデザインの洗練
 st.markdown("""
 <style>
     .main { background-color: #0d1117; color: #c9d1d9; }
-    .stButton>button { width: 100%; border-radius: 4px; font-size: 12px; padding: 2px; }
+    .stButton>button { width: 100%; border-radius: 6px; font-size: 13px; font-weight: bold; padding: 6px; }
     .client-card {
         background-color: #161b22;
         padding: 15px;
         border-radius: 10px;
         border: 1px solid #30363d;
         margin-bottom: 10px;
+    }
+    .panel-box {
+        background-color: #161b22;
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #30363d;
+        margin-bottom: 15px;
     }
     .grid-cell {
         background-color: #161b22;
@@ -76,9 +85,10 @@ client = CLIENT_TYPES[st.session_state.current_client]
 st.title("異次元インテリア・リノベーション")
 st.caption("マルチバースの異世界顧客に向けた、理想の次元空間設計シミュレーション")
 
-col_client, col_grid, col_stats = st.columns([0.7, 2.0, 0.7])
+# 3カラムの配分を見直し (左: クライアント要件 | 中央: グリッド設計 | 右: カタログ & モニター)
+col_client, col_grid, col_right = st.columns([1, 1.5, 1.2])
 
-# --- カラム1: クライアント情報 & 家具カタログ ---
+# --- カラム1: クライアント要件 ---
 with col_client:
     st.subheader("👤 クライアント要件")
     if os.path.exists(client["avatar_image"]):
@@ -96,45 +106,7 @@ with col_client:
     </div>
     """, unsafe_allow_html=True)
 
-    st.subheader("🧰 家具カタログ")
-    
-    # 1. スタイルで絞り込むためのセレクトボックス
-    style_filter_options = ["すべて"] + list(STYLE_NAMES.keys())
-    selected_style = st.selectbox(
-        "スタイルで絞り込み",
-        options=style_filter_options,
-        format_func=lambda x: "すべて表示" if x == "すべて" else STYLE_NAMES[x]
-    )
-    
-    # 2. 選択されたスタイルに応じて家具のキーをフィルタリング
-    if selected_style == "すべて":
-        filtered_furniture_keys = list(FURNITURE_CATALOG.keys())
-    else:
-        filtered_furniture_keys = [
-            fid for fid, info in FURNITURE_CATALOG.items() 
-            if info["style"] == selected_style
-        ]
-    
-    # 3. 絞り込んだ家具リストがある場合のみセレクトボックスを表示
-    if filtered_furniture_keys:
-        selected_furniture = st.selectbox(
-            "配置するアイテムを選択",
-            options=filtered_furniture_keys,
-            format_func=lambda x: FURNITURE_CATALOG[x]['name']
-        )
-        
-        item_info = FURNITURE_CATALOG[selected_furniture]
-        if os.path.exists(item_info["image_path"]):
-            st.image(item_info["image_path"], use_container_width=True)
-        
-        style_display = STYLE_NAMES.get(item_info["style"], item_info["style"])
-        st.markdown(f"**所属スタイル**: {style_display}")
-
-        st.info(f"**{item_info['name']}**\n\nコスト: {item_info['cost']:,} Cr\n温度 {item_info['temp_delta']:+}°C | 湿度 {item_info['humidity_delta']:+}% | 重力 {item_info['gravity_delta']:+}G | 審美度 +{item_info['aesthetic']}")
-    else:
-        st.warning("このスタイルに該当する家具はありません。")
-        selected_furniture = None
-# --- カラム2: 6x6 グリッド設計室 (画像配置対応) ---
+# --- カラム2: 6x6 グリッド設計室 ---
 with col_grid:
     st.subheader("📐 6×6 空間デザイン設計")
     click_mode = st.radio("アクション", ["選択マスに配置", "マスを撤去"], horizontal=True)
@@ -148,7 +120,6 @@ with col_grid:
             cell_item = st.session_state.grid_furniture[r][c]
             
             with cols[c]:
-                # セル内の表示コンテナ
                 if cell_item and cell_item in FURNITURE_CATALOG:
                     img_path = FURNITURE_CATALOG[cell_item]["image_path"]
                     if os.path.exists(img_path):
@@ -156,13 +127,12 @@ with col_grid:
                     else:
                         st.markdown(f"<div style='text-align:center; font-size:10px;'>[配置済]</div>", unsafe_allow_html=True)
                 else:
-                    st.markdown(f"<div class='grid-cell' style='height:90px; display:flex; align-items:center; justify-content:center; color:#30363d;'>+</div>", unsafe_allow_html=True)
+                    st.markdown(f"<div class='grid-cell' style='height:75px; display:flex; align-items:center; justify-content:center; color:#30363d;'>+</div>", unsafe_allow_html=True)
                 
-                # 各セルのクリックボタン
                 btn_label = "❌" if cell_item else "📍"
                 if st.button(btn_label, key=f"grid_btn_{r}_{c}"):
                     if click_mode == "選択マスに配置":
-                        st.session_state.grid_furniture[r][c] = selected_furniture
+                        st.session_state.grid_furniture[r][c] = selected_furniture if 'selected_furniture' in locals() else list(FURNITURE_CATALOG.keys())[0]
                     else:
                         st.session_state.grid_furniture[r][c] = ""
                     st.rerun()
@@ -174,9 +144,52 @@ with col_grid:
 placed_ids = [cell for row in st.session_state.grid_furniture for cell in row if cell]
 current_stats = calculate_room_stats(placed_ids)
 
-# --- カラム3: リアルタイム環境モニター & 施工 ---
-with col_stats:
-    st.subheader("📊 リアルタイム環境状態")
+# --- カラム3: 家具カタログ & リアルタイム環境モニター ---
+with col_right:
+    st.subheader("🧰 家具カタログ")
+    with st.container():
+        style_filter_options = ["すべて"] + list(STYLE_NAMES.keys())
+        selected_style = st.selectbox(
+            "スタイルで絞り込み",
+            options=style_filter_options,
+            format_func=lambda x: "すべて表示" if x == "すべて" else STYLE_NAMES[x]
+        )
+        
+        if selected_style == "すべて":
+            filtered_furniture_keys = list(FURNITURE_CATALOG.keys())
+        else:
+            filtered_furniture_keys = [
+                fid for fid, info in FURNITURE_CATALOG.items() 
+                if info["style"] == selected_style
+            ]
+        
+        if filtered_furniture_keys:
+            selected_furniture = st.selectbox(
+                "配置するアイテムを選択",
+                options=filtered_furniture_keys,
+                format_func=lambda x: FURNITURE_CATALOG[x]['name']
+            )
+            
+            item_info = FURNITURE_CATALOG[selected_furniture]
+            
+            # カタログ内の情報表示をコンパクトに
+            col_img, col_desc = st.columns([1, 1.2])
+            with col_img:
+                if os.path.exists(item_info["image_path"]):
+                    st.image(item_info["image_path"], use_container_width=True)
+            with col_desc:
+                style_display = STYLE_NAMES.get(item_info["style"], item_info["style"])
+                st.markdown(f"<p style='font-size:11px; margin:0;'><b>スタイル</b>: {style_display}</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='font-size:11px; margin:0;'><b>コスト</b>: {item_info['cost']:,} Cr</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='font-size:11px; margin:0;'><b>効果</b>: 温{item_info['temp_delta']:+d} / 湿{item_info['humidity_delta']:+d}%</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='font-size:11px; margin:0;'><b>審美度</b>: +{item_info['aesthetic']} pt</p>", unsafe_allow_html=True)
+        else:
+            st.warning("このスタイルに該当する家具はありません。")
+            selected_furniture = None
+
+    st.divider()
+
+    st.subheader("📊 環境モニター & 施工")
 
     c1, c2 = st.columns(2)
     c1.metric("現在温度", f"{current_stats['temp']}°C", 
@@ -195,8 +208,6 @@ with col_stats:
     st.write(f"**使用予算**: {current_stats['cost']:,} / {client['budget']:,} Cr")
     st.progress(cost_percentage)
 
-    st.divider()
-
     if st.button("🔨 リノベーション施工・レビュー実行", type="primary"):
         result = evaluate_renovation(st.session_state.current_client, placed_ids)
         
@@ -210,5 +221,3 @@ with col_stats:
             st.session_state.reputation += result['score'] // 10
         else:
             st.error("評価が不十分なため、報酬は支払われませんでした。")
-
-       
