@@ -57,7 +57,7 @@ def evaluate_renovation(client_key, placed_furniture_ids):
         temp_score = 100 if stats["temp"] >= 750 else max(0, 100 - (750 - stats["temp"]) // 4)
         hum_score = 100 if stats["humidity"] <= 20 else max(0, 100 - (stats["humidity"] - 20) * 2)
         grav_diff = abs(stats["gravity"] - 1.5)
-        grav_score = max(0, 100 - int(grav_diff * 20)) # 減点を少しマイルドに
+        grav_score = max(0, 100 - int(grav_diff * 20))
 
     elif client_key == "cyber_ai":
         temp_score = 100 if stats["temp"] <= -80 else max(0, 100 - (stats["temp"] - (-80)) // 3)
@@ -75,12 +75,41 @@ def evaluate_renovation(client_key, placed_furniture_ids):
         hum_score = 100 if 20 <= stats["humidity"] <= 60 else max(0, 100 - abs(stats["humidity"] - 40) * 2)
         grav_score = 100 if stats["gravity"] <= 0.2 else max(0, 100 - int(stats["gravity"] * 40))
 
+    # ==========================================
+    # ★新規追加した4人の依頼者の環境適応度計算
+    # ==========================================
+    elif client_key == "hybrid_soldier":
+        # 混血の重装機兵 (マグマ × サイバー): 高温(400°C以上)かつ超低湿度(5%以下)、標準重力
+        temp_score = 100 if stats["temp"] >= 400 else max(0, 100 - (400 - stats["temp"]) // 3)
+        hum_score = 100 if stats["humidity"] <= 5 else max(0, 100 - (stats["humidity"] - 5) * 4)
+        grav_diff = abs(stats["gravity"] - 1.0)
+        grav_score = max(0, 100 - int(grav_diff * 30))
+
+    elif client_key == "abyssal_observer":
+        # 深海サイバーの観測者 (深海 × サイバー): 低温(-50°C以下)、中高湿度(50〜70%)、やや高めの重力
+        temp_score = 100 if stats["temp"] <= -50 else max(0, 100 - (stats["temp"] - (-50)) // 3)
+        hum_score = 100 if 50 <= stats["humidity"] <= 70 else max(0, 100 - abs(stats["humidity"] - 60) * 2)
+        grav_diff = abs(stats["gravity"] - 1.5)
+        grav_score = max(0, 100 - int(grav_diff * 30))
+
+    elif client_key == "ether_alchemist":
+        # 星間風の錬金術師 (エーテル × 深海): 常温快適(10〜35°C)、中湿度、完全無重力(0G)
+        temp_score = 100 if 10 <= stats["temp"] <= 35 else max(0, 100 - abs(stats["temp"] - 22) * 3)
+        hum_score = 100 if 30 <= stats["humidity"] <= 50 else max(0, 100 - abs(stats["humidity"] - 40) * 2)
+        grav_score = 100 if stats["gravity"] <= 0.1 else max(0, 100 - int(stats["gravity"] * 50))
+
+    elif client_key == "flare_void_commander":
+        # マグマ次元の旅団長 (マグマ × エーテル): 超高温(500°C以上)、低湿度、低重力(0.2G付近)
+        temp_score = 100 if stats["temp"] >= 500 else max(0, 100 - (500 - stats["temp"]) // 3)
+        hum_score = 100 if stats["humidity"] <= 15 else max(0, 100 - (stats["humidity"] - 15) * 3)
+        grav_diff = abs(stats["gravity"] - 0.2)
+        grav_score = max(0, 100 - int(grav_diff * 40))
+
     else:
         temp_score = 100 if stats["temp"] >= client["min_temp"] else max(0, 100 - (client["min_temp"] - stats["temp"]) // 10)
         hum_score = 100 if stats["humidity"] <= client["max_humidity"] else max(0, 100 - (stats["humidity"] - client["max_humidity"]) * 2)
         grav_diff = abs(stats["gravity"] - client["target_gravity"])
         grav_score = max(0, 100 - int(grav_diff * 40))
-
     env_score = (temp_score * 0.4) + (hum_score * 0.3) + (grav_score * 0.3)
 
     # 3. 好みスタイルボーナス（2つのスタイルに対応）
