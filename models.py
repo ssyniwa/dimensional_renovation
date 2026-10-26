@@ -44,7 +44,7 @@ def calculate_room_stats(placed_furniture_ids):
         "style_counts": style_counts
     }
 
-def evaluate_renovation(client_key, placed_furniture_ids):
+def evaluate_renovation(client_key, placed_furniture_ids, required_furniture_keys=[]):
     """顧客の要求と現在のお部屋構造から採点・レビューを判定 (修正版)"""
     client = CLIENT_TYPES[client_key]
     stats = calculate_room_stats(placed_furniture_ids)
