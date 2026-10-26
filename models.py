@@ -83,10 +83,10 @@ def evaluate_renovation(client_key, placed_furniture_ids):
 
     env_score = (temp_score * 0.4) + (hum_score * 0.3) + (grav_score * 0.3)
 
-    # 3. 好みスタイルボーナス
-    pref_style = client["preferred_style"]
-    style_match_count = stats["style_counts"].get(pref_style, 0)
-    style_bonus = style_match_count * 15
+    # 3. 好みスタイルボーナス（2つのスタイルに対応）
+    pref_styles = client.get("preferred_styles", [client.get("preferred_style")])
+    style_match_count = sum(stats["style_counts"].get(style, 0) for style in pref_styles)
+    style_bonus = style_match_count * 12  # 配置した数に応じてボーナス加算
 
     # ★【修正ポイント】総合得点の計算：審美度・スタイルがしっかり点数に反映されるように調整
     # 総合得点 (0 - 100)
