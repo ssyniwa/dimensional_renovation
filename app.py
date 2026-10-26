@@ -1,5 +1,5 @@
 """
-『異次元インテリア・リノベーション』 Main Streamlit Application (レイアウト最適化版)
+『異次元インテリア・リノベーション』 Main Streamlit Application (全クリア・グリッド保存対応版)
 """
 import os
 import streamlit as st
@@ -58,9 +58,19 @@ if "funds" not in st.session_state:
 if "reputation" not in st.session_state:
     st.session_state.reputation = 0
 if "current_client" not in st.session_state:
-    st.session_state.current_client = "magma_dragon"
+    st.session_state.current_client = list(CLIENT_TYPES.keys())[0]
+
+# 依頼ごとのグリッド状態管理用（クライアント別グリッド辞書）
+if "client_grids" not in st.session_state:
+    st.session_state.client_grids = {key: [["" for _ in range(6)] for _ in range(6)] for key in CLIENT_TYPES.keys()}
+
+# 現在編集中のグリッドをアクティブなクライアントに同期
 if "grid_furniture" not in st.session_state:
-    st.session_state.grid_furniture = [["" for _ in range(6)] for _ in range(6)]
+    st.session_state.grid_furniture = st.session_state.client_grids[st.session_state.current_client]
+
+# 完了した依頼の記録
+if "completed_clients" not in st.session_state:
+    st.session_state.completed_clients = {key: False for key in CLIENT_TYPES.keys()}
 
 # サイドバー：事務所パラメータ & 顧客選択
 st.sidebar.title("🌌 次元建築事務所")
@@ -76,16 +86,54 @@ for key, client_data in CLIENT_TYPES.items():
         if os.path.exists(client_data["avatar_image"]):
             st.image(client_data["avatar_image"], width=35)
     with col_btn:
-        if st.button(client_data["name"], key=f"btn_{key}"):
+        # 完了している場合は名前の横にマークを表示
+        label = f"{client_data['name']} ✅" if st.session_state.completed_clients[key] else client_data["name"]
+        if st.button(label, key=f"btn_{key}"):
+            # 顧客を切り替える前に、現在のグリッド状態を保存
+            st.session_state.client_grids[st.session_state.current_client] = st.session_state.grid_furniture
+            # 顧客を切り替え
             st.session_state.current_client = key
+            # 切り替え先のグリッド状態をロード
+            st.session_state.grid_furniture = st.session_state.client_grids[key]
+            st.rerun()
 
-# メイン表示エリア
+# --- 全ての依頼が完了したかのチェック ---
+all_completed = all(st.session_state.completed_clients.values())
+
+if all_completed:
+    st.title("🎉 全ての依頼が完了しました！")
+    st.markdown("### 🏆 結果発表：各クライアントの設計ルーム一覧")
+    st.write("マルチバースの全顧客が大満足する素晴らしい建築実績を残しました。以下は各依頼で保存された空間デザインです。")
+
+    for key, client_data in CLIENT_TYPES.items():
+        st.divider()
+        st.subheader(f"👤 依頼者: {client_data['name']}")
+        saved_grid = st.session_state.client_grids[key]
+        
+        # 保存されたグリッドをミニ表示（6列カラム）
+        for r in range(6):
+            cols = st.columns(6)
+            for c in range(6):
+                cell_item = saved_grid[r][c]
+                with cols[c]:
+                    if cell_item and cell_item in FURNITURE_CATALOG:
+                        img_path = FURNITURE_CATALOG[cell_item]["image_path"]
+                        if os.path.exists(img_path):
+                            st.image(img_path, use_container_width=True)
+                        else:
+                            st.markdown(f"<div style='text-align:center; font-size:8px;'>[配置済]</div>", unsafe_allow_html=True)
+                    else:
+                        st.markdown(f"<div class='grid-cell' style='height:40px; display:flex; align-items:center; justify-content:center; color:#30363d; font-size:10px;'>-</div>", unsafe_allow_html=True)
+    
+    st.stop()  # 以降の通常画面の描画を停止
+
+# --- 通常のメイン表示エリア ---
 client = CLIENT_TYPES[st.session_state.current_client]
 
 st.title("異次元インテリア・リノベーション")
 st.caption("マルチバースの異世界顧客に向けた、理想の次元空間設計シミュレーション")
 
-# 3カラムの配分を見直し (左: クライアント要件 | 中央: グリッド設計 | 右: カタログ & モニター)
+# 3カラムの配分 (左: クライアント要件 | 中央: グリッド設計 | 右: カタログ & モニター)
 col_client, col_grid, col_right = st.columns([0.8, 2.0, 0.8])
 
 # --- カラム1: クライアント要件 ---
@@ -93,9 +141,13 @@ with col_client:
     st.subheader("👤 クライアント要件")
     if os.path.exists(client["avatar_image"]):
         st.image(client["avatar_image"], use_container_width=True)
+    
+    status_badge = "<p style='color: #3fb950; font-weight: bold;'>【 依頼達成済み (Rank A以上) 】</p>" if st.session_state.completed_clients[st.session_state.current_client] else ""
+    
     st.markdown(f"""
     <div class="client-card">
         <h3>{client['name']}</h3>
+        {status_badge}
         <p><b>{client['title']}</b></p>
         <p>{client['description']}</p>
         <hr style="border-color:#30363d;">
@@ -135,10 +187,13 @@ with col_grid:
                         st.session_state.grid_furniture[r][c] = selected_furniture if 'selected_furniture' in locals() else list(FURNITURE_CATALOG.keys())[0]
                     else:
                         st.session_state.grid_furniture[r][c] = ""
+                    # 変更を現在のクライアントのグリッド状態に保存
+                    st.session_state.client_grids[st.session_state.current_client] = st.session_state.grid_furniture
                     st.rerun()
 
     if st.button("🗑️ 空間を全クリア"):
         st.session_state.grid_furniture = [["" for _ in range(6)] for _ in range(6)]
+        st.session_state.client_grids[st.session_state.current_client] = st.session_state.grid_furniture
         st.rerun()
 
 placed_ids = [cell for row in st.session_state.grid_furniture for cell in row if cell]
@@ -172,7 +227,6 @@ with col_right:
             
             item_info = FURNITURE_CATALOG[selected_furniture]
             
-            # カタログ内の情報表示をコンパクトに
             col_img, col_desc = st.columns([1, 1.2])
             with col_img:
                 if os.path.exists(item_info["image_path"]):
@@ -219,5 +273,11 @@ with col_right:
             st.success(f"報酬 {result['reward']:,} Cr を獲得しました！")
             st.session_state.funds += result['reward']
             st.session_state.reputation += result['score'] // 10
+            
+            # 評価が A または S の場合、グリッドの保存と完了フラグの更新を行う
+            if result['rank'] in ["S", "A"]:
+                st.session_state.completed_clients[st.session_state.current_client] = True
+                st.session_state.client_grids[st.session_state.current_client] = st.session_state.grid_furniture
+                st.success("🎯 依頼達成！空間デザインが保存されました。")
         else:
             st.error("評価が不十分なため、報酬は支払われませんでした。")
