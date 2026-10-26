@@ -181,7 +181,7 @@ with col_right:
                 style_display = STYLE_NAMES.get(item_info["style"], item_info["style"])
                 st.markdown(f"<p style='font-size:11px; margin:0;'><b>スタイル</b>: {style_display}</p>", unsafe_allow_html=True)
                 st.markdown(f"<p style='font-size:11px; margin:0;'><b>コスト</b>: {item_info['cost']:,} Cr</p>", unsafe_allow_html=True)
-                st.markdown(f"<p style='font-size:11px; margin:0;'><b>効果</b>: 温{item_info['temp_delta']:+d} / 湿{item_info['humidity_delta']:+d} / 重力{item_info['gravity_delta']:+f} %</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='font-size:11px; margin:0;'><b>効果</b>: 温{item_info['temp_delta']:+d} / 湿{item_info['humidity_delta']:+d}% / 重力{item_info['gravity_delta']:+.2f}</p>", unsafe_allow_html=True)
                 st.markdown(f"<p style='font-size:11px; margin:0;'><b>審美度</b>: +{item_info['aesthetic']} pt</p>", unsafe_allow_html=True)
         else:
             st.warning("このスタイルに該当する家具はありません。")
