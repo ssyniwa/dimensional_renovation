@@ -1,5 +1,5 @@
 """
-『異次元インテリア・リノベーション』 Main Streamlit Application (全クリア・グリッド保存対応版)
+『異次元インテリア・リノベーション』 Main Streamlit Application (家具配置修正版)
 """
 import os
 import streamlit as st
@@ -52,7 +52,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# セッション状態の初期化
+# セッション状態の初期izing
 if "funds" not in st.session_state:
     st.session_state.funds = 100000
 if "reputation" not in st.session_state:
@@ -86,14 +86,10 @@ for key, client_data in CLIENT_TYPES.items():
         if os.path.exists(client_data["avatar_image"]):
             st.image(client_data["avatar_image"], width=35)
     with col_btn:
-        # 完了している場合は名前の横にマークを表示
         label = f"{client_data['name']} ✅" if st.session_state.completed_clients[key] else client_data["name"]
         if st.button(label, key=f"btn_{key}"):
-            # 顧客を切り替える前に、現在のグリッド状態を保存
             st.session_state.client_grids[st.session_state.current_client] = st.session_state.grid_furniture
-            # 顧客を切り替え
             st.session_state.current_client = key
-            # 切り替え先のグリッド状態をロード
             st.session_state.grid_furniture = st.session_state.client_grids[key]
             st.rerun()
 
@@ -110,7 +106,6 @@ if all_completed:
         st.subheader(f"👤 依頼者: {client_data['name']}")
         saved_grid = st.session_state.client_grids[key]
         
-        # 保存されたグリッドをミニ表示（6列カラム）
         for r in range(6):
             cols = st.columns(6)
             for c in range(6):
@@ -125,7 +120,7 @@ if all_completed:
                     else:
                         st.markdown(f"<div class='grid-cell' style='height:40px; display:flex; align-items:center; justify-content:center; color:#30363d; font-size:10px;'>-</div>", unsafe_allow_html=True)
     
-    st.stop()  # 以降の通常画面の描画を停止
+    st.stop()
 
 # --- 通常のメイン表示エリア ---
 client = CLIENT_TYPES[st.session_state.current_client]
@@ -136,6 +131,51 @@ st.caption("マルチバースの異世界顧客に向けた、理想の次元�
 # 3カラムの配分 (左: クライアント要件 | 中央: グリッド設計 | 右: カタログ & モニター)
 col_client, col_grid, col_right = st.columns([0.8, 2.0, 0.8])
 
+# --- カラム3 (右側) の家具カタログを先に処理し、選択中の家具を確定させる ---
+with col_right:
+    st.subheader("🧰 家具カタログ")
+    with st.container():
+        style_filter_options = ["すべて"] + list(STYLE_NAMES.keys())
+        selected_style = st.selectbox(
+            "スタイルで絞り込み",
+            options=style_filter_options,
+            format_func=lambda x: "すべて表示" if x == "すべて" else STYLE_NAMES[x],
+            key="selected_style_filter"
+        )
+        
+        if selected_style == "すべて":
+            filtered_furniture_keys = list(FURNITURE_CATALOG.keys())
+        else:
+            filtered_furniture_keys = [
+                fid for fid, info in FURNITURE_CATALOG.items() 
+                if info["style"] == selected_style
+            ]
+        
+        if filtered_furniture_keys:
+            # key="selected_furniture" を指定してセッションステートに保存
+            selected_furniture = st.selectbox(
+                "配置するアイテムを選択",
+                options=filtered_furniture_keys,
+                format_func=lambda x: FURNITURE_CATALOG[x]['name'],
+                key="selected_furniture"
+            )
+            
+            item_info = FURNITURE_CATALOG[selected_furniture]
+            
+            col_img, col_desc = st.columns([1, 1.2])
+            with col_img:
+                if os.path.exists(item_info["image_path"]):
+                    st.image(item_info["image_path"], use_container_width=True)
+            with col_desc:
+                style_display = STYLE_NAMES.get(item_info["style"], item_info["style"])
+                st.markdown(f"<p style='font-size:11px; margin:0;'><b>スタイル</b>: {style_display}</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='font-size:11px; margin:0;'><b>コスト</b>: {item_info['cost']:,} Cr</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='font-size:11px; margin:0;'><b>効果</b>: 温{item_info['temp_delta']:+d} / 湿{item_info['humidity_delta']:+d}% / 重力{item_info['gravity_delta']:+.2f}</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='font-size:11px; margin:0;'><b>審美度</b>: +{item_info['aesthetic']} pt</p>", unsafe_allow_html=True)
+        else:
+            st.warning("このスタイルに該当する家具はありません。")
+            selected_furniture = None
+
 # --- カラム1: クライアント要件 ---
 with col_client:
     st.subheader("👤 クライアント要件")
@@ -144,7 +184,6 @@ with col_client:
     
     status_badge = "<p style='color: #3fb950; font-weight: bold;'>【 依頼達成済み (Rank A以上) 】</p>" if st.session_state.completed_clients[st.session_state.current_client] else ""
     
-    # 修正: 行頭の余計なインデントを削除
     st.markdown(f"""<div class="client-card">
 <h3>{client['name']}</h3>
 {status_badge}
@@ -157,7 +196,7 @@ with col_client:
 <p>🌌 <b>目標重力:</b> {client['target_gravity']} G</p>
 </div>""", unsafe_allow_html=True)
 
-# --- カラム2: 6x6 グリッド設計室 ---
+# --- カラム2: 6x6 グリッド設計室（右側のカタログ処理後に描画するため、選択家具が確実に取得できる） ---
 with col_grid:
     st.subheader("📐 6×6 空間デザイン設計")
     click_mode = st.radio("アクション", ["選択マスに配置", "マスを撤去"], horizontal=True)
@@ -183,10 +222,13 @@ with col_grid:
                 btn_label = "❌" if cell_item else "📍"
                 if st.button(btn_label, key=f"grid_btn_{r}_{c}"):
                     if click_mode == "選択マスに配置":
-                        st.session_state.grid_furniture[r][c] = selected_furniture if 'selected_furniture' in locals() else list(FURNITURE_CATALOG.keys())[0]
+                        # st.session_state.get("selected_furniture") を使って確実に現在選ばれている家具を取得
+                        chosen_item = st.session_state.get("selected_furniture")
+                        if chosen_item:
+                            st.session_state.grid_furniture[r][c] = chosen_item
                     else:
                         st.session_state.grid_furniture[r][c] = ""
-                    # 変更を現在のクライアントのグリッド状態に保存
+                    
                     st.session_state.client_grids[st.session_state.current_client] = st.session_state.grid_furniture
                     st.rerun()
 
@@ -198,48 +240,8 @@ with col_grid:
 placed_ids = [cell for row in st.session_state.grid_furniture for cell in row if cell]
 current_stats = calculate_room_stats(placed_ids)
 
-# --- カラム3: 家具カタログ & リアルタイム環境モニター ---
+# --- カラム3 (続き): 環境モニター & 施工 ---
 with col_right:
-    st.subheader("🧰 家具カタログ")
-    with st.container():
-        style_filter_options = ["すべて"] + list(STYLE_NAMES.keys())
-        selected_style = st.selectbox(
-            "スタイルで絞り込み",
-            options=style_filter_options,
-            format_func=lambda x: "すべて表示" if x == "すべて" else STYLE_NAMES[x]
-        )
-        
-        if selected_style == "すべて":
-            filtered_furniture_keys = list(FURNITURE_CATALOG.keys())
-        else:
-            filtered_furniture_keys = [
-                fid for fid, info in FURNITURE_CATALOG.items() 
-                if info["style"] == selected_style
-            ]
-        
-        if filtered_furniture_keys:
-            selected_furniture = st.selectbox(
-                "配置するアイテムを選択",
-                options=filtered_furniture_keys,
-                format_func=lambda x: FURNITURE_CATALOG[x]['name']
-            )
-            
-            item_info = FURNITURE_CATALOG[selected_furniture]
-            
-            col_img, col_desc = st.columns([1, 1.2])
-            with col_img:
-                if os.path.exists(item_info["image_path"]):
-                    st.image(item_info["image_path"], use_container_width=True)
-            with col_desc:
-                style_display = STYLE_NAMES.get(item_info["style"], item_info["style"])
-                st.markdown(f"<p style='font-size:11px; margin:0;'><b>スタイル</b>: {style_display}</p>", unsafe_allow_html=True)
-                st.markdown(f"<p style='font-size:11px; margin:0;'><b>コスト</b>: {item_info['cost']:,} Cr</p>", unsafe_allow_html=True)
-                st.markdown(f"<p style='font-size:11px; margin:0;'><b>効果</b>: 温{item_info['temp_delta']:+d} / 湿{item_info['humidity_delta']:+d}% / 重力{item_info['gravity_delta']:+.2f}</p>", unsafe_allow_html=True)
-                st.markdown(f"<p style='font-size:11px; margin:0;'><b>審美度</b>: +{item_info['aesthetic']} pt</p>", unsafe_allow_html=True)
-        else:
-            st.warning("このスタイルに該当する家具はありません。")
-            selected_furniture = None
-
     st.divider()
 
     st.subheader("📊 環境モニター & 施工")
@@ -273,7 +275,6 @@ with col_right:
             st.session_state.funds += result['reward']
             st.session_state.reputation += result['score'] // 10
             
-            # 評価が A または S の場合、グリッドの保存と完了フラグの更新を行う
             if result['rank'] in ["S", "A"]:
                 st.session_state.completed_clients[st.session_state.current_client] = True
                 st.session_state.client_grids[st.session_state.current_client] = st.session_state.grid_furniture
