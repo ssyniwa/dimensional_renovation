@@ -1,5 +1,5 @@
 """
-『異次元インテリア・リノベーション』 Main Streamlit Application (家具配置修正版)
+『異次元インテリア・リノベーション』 Main Streamlit Application (評判・ランク連動調整版)
 """
 import os
 import streamlit as st
@@ -52,7 +52,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# セッション状態の初期izing
+# セッション状態の初期化
 if "funds" not in st.session_state:
     st.session_state.funds = 100000
 if "reputation" not in st.session_state:
@@ -152,7 +152,6 @@ with col_right:
             ]
         
         if filtered_furniture_keys:
-            # key="selected_furniture" を指定してセッションステートに保存
             selected_furniture = st.selectbox(
                 "配置するアイテムを選択",
                 options=filtered_furniture_keys,
@@ -196,7 +195,7 @@ with col_client:
 <p>🌌 <b>目標重力:</b> {client['target_gravity']} G</p>
 </div>""", unsafe_allow_html=True)
 
-# --- カラム2: 6x6 グリッド設計室（右側のカタログ処理後に描画するため、選択家具が確実に取得できる） ---
+# --- カラム2: 6x6 グリッド設計室 ---
 with col_grid:
     st.subheader("📐 6×6 空間デザイン設計")
     click_mode = st.radio("アクション", ["選択マスに配置", "マスを撤去"], horizontal=True)
@@ -222,7 +221,6 @@ with col_grid:
                 btn_label = "❌" if cell_item else "📍"
                 if st.button(btn_label, key=f"grid_btn_{r}_{c}"):
                     if click_mode == "選択マスに配置":
-                        # st.session_state.get("selected_furniture") を使って確実に現在選ばれている家具を取得
                         chosen_item = st.session_state.get("selected_furniture")
                         if chosen_item:
                             st.session_state.grid_furniture[r][c] = chosen_item
@@ -270,14 +268,20 @@ with col_right:
         st.markdown(f"### 評価ランク: **{result['rank']}** (スコア: {result['score']}/100)")
         st.write(result['comment'])
 
-        if result['rank'] in ["S", "A", "B"]:
-            st.success(f"報酬 {result['reward']:,} Cr を獲得しました！")
+        # 評価に応じた処理の分岐
+        if result['rank'] in ["S", "A"]:
+            st.success(f"🌟 大成功！報酬 {result['reward']:,} Cr を獲得し、事務所の評判がアップしました！")
             st.session_state.funds += result['reward']
-            st.session_state.reputation += result['score'] // 10
+            # 評価A以上でのみ事務所の評判が上がる
+            st.session_state.reputation += result['score'] // 5
             
-            if result['rank'] in ["S", "A"]:
-                st.session_state.completed_clients[st.session_state.current_client] = True
-                st.session_state.client_grids[st.session_state.current_client] = st.session_state.grid_furniture
-                st.success("🎯 依頼達成！空間デザインが保存されました。")
+            # グリッドの保存と完了フラグの更新
+            st.session_state.completed_clients[st.session_state.current_client] = True
+            st.session_state.client_grids[st.session_state.current_client] = st.session_state.grid_furniture
+            st.success("🎯 依頼達成！空間デザインが保存されました。")
+            
+        elif result['rank'] == "B":
+            st.warning(f"💡 なんとか合格ですが、評判は上がりませんでした。報酬: {result['reward']:,} Cr")
+            st.session_state.funds += result['reward']
         else:
-            st.error("評価が不十分なため、報酬は支払われませんでした。")
+            st.error("❌ 評価が不十分なため、報酬は支払われず、依頼達成とはなりませんでした。")
