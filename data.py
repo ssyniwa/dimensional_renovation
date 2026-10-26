@@ -46,6 +46,51 @@ CLIENT_TYPES = {
         "budget": 750000,
         "preferred_style": "astral_ether",
         "avatar_image": "images/clients/astral_spirit.jpg"
+    },
+    # --- 新規追加の4人の依頼者 ---
+    "hybrid_soldier": {
+        "name": "混血の重装機兵",
+        "title": "第4世代サイボーグ・傭兵団長",
+        "description": "肉体の維持に高温を好む一方、心脳回路の冷却にサイバー環境を必須とする戦士。「マグマ」と「サイバー」が融合した部屋を求めている。",
+        "min_temp": 400,
+        "max_humidity": 5,
+        "target_gravity": 1.0,
+        "budget": 800000,
+        "preferred_styles": ["industrial_magma", "cyberpunk_neon"], # 2つのスタイルを指定
+        "avatar_image": "images/clients/hybrid_soldier.jpg"
+    },
+    "abyssal_observer": {
+        "name": "深海サイバーの観測者",
+        "title": "アビス・データネットの管理端末",
+        "description": "深海の高湿度・水温管理と、サイバー空間の精密な冷却を同時に満たすハイブリッド空間を要求している。",
+        "min_temp": -50,
+        "max_humidity": 60,
+        "target_gravity": 1.5,
+        "budget": 850000,
+        "preferred_styles": ["crystal_ocean", "cyberpunk_neon"],
+        "avatar_image": "images/clients/abyssal_observer.jpg"
+    },
+    "ether_alchemist": {
+        "name": "星間風の錬金術師",
+        "title": "次元回廊の移動研究所主宰",
+        "description": "無重力の浮遊感（エーテル）の中で、深海の結晶や流体家具を用いた神秘的な実験室を作ってほしいという依頼。",
+        "min_temp": 10,
+        "max_humidity": 50,
+        "target_gravity": 0.0,
+        "budget": 780000,
+        "preferred_styles": ["astral_ether", "crystal_ocean"],
+        "avatar_image": "images/clients/ether_alchemist.jpg"
+    },
+    "flare_void_commander": {
+        "name": "マグマ次元の旅団長",
+        "title": "次元間航行艦隊の司令官",
+        "description": "灼熱のマグマエネルギーと、次元を揺らす無重力エーテルが共存する荒々しくも美しい空間を好む。",
+        "min_temp": 500,
+        "max_humidity": 10,
+        "target_gravity": 0.2,
+        "budget": 900000,
+        "preferred_styles": ["industrial_magma", "astral_ether"],
+        "avatar_image": "images/clients/flare_void_commander.jpg"
     }
 }
 
