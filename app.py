@@ -5,7 +5,7 @@ import os
 import streamlit as st
 from data import CLIENT_TYPES, FURNITURE_CATALOG
 from models import calculate_room_stats, evaluate_renovation
-
+import random
 # スタイルの日本語名マッピング
 STYLE_NAMES = {
     "industrial_magma": "🔥 工業・マグマ風",
@@ -71,7 +71,21 @@ if "grid_furniture" not in st.session_state:
 # 完了した依頼の記録
 if "completed_clients" not in st.session_state:
     st.session_state.completed_clients = {key: False for key in CLIENT_TYPES.keys()}
-
+if "client_required_items" not in st.session_state:
+    st.session_state.client_required_items = {}
+    for key, client_data in CLIENT_TYPES.items():
+        # クライアントの好みスタイルを取得（単一の場合もリスト化に対応）
+        p_styles = client_data.get("preferred_styles", [client_data.get("preferred_style")])
+        
+        # そのスタイルに属する家具のキーを抽出
+        matching_furniture = [
+            fid for fid, info in FURNITURE_CATALOG.items() 
+            if info["style"] in p_styles
+        ]
+        
+        # 2つランダムに選ぶ（家具が2つ未満の場合はある分だけ）
+        selected_reqs = random.sample(matching_furniture, min(2, len(matching_furniture)))
+        st.session_state.client_required_items[key] = selected_reqs
 # サイドバー：事務所パラメータ & 顧客選択
 st.sidebar.title("🌌 次元建築事務所")
 st.sidebar.metric("所持金", f"{st.session_state.funds:,} Cr")
@@ -183,11 +197,24 @@ with col_client:
     
     status_badge = "<p style='color: #3fb950; font-weight: bold;'>【 依頼達成済み (Rank A以上) 】</p>" if st.session_state.completed_clients[st.session_state.current_client] else ""
     
+    # 好みのスタイル名をリストアップ
+    p_styles = client.get("preferred_styles", [client.get("preferred_style")])
+    styles_text = " / ".join([STYLE_NAMES.get(s, s) for s in p_styles])
+    
+    # 必須家具の名前をリストアップ
+    req_keys = st.session_state.client_required_items.get(st.session_state.current_client, [])
+    req_names_text = ", ".join([FURNITURE_CATALOG[fid]['name'] for fid in req_keys if fid in FURNITURE_CATALOG])
+    if not req_names_text:
+        req_names_text = "特になし"
+
     st.markdown(f"""<div class="client-card">
 <h3>{client['name']}</h3>
 {status_badge}
 <p><b>{client['title']}</b></p>
 <p>{client['description']}</p>
+<hr style="border-color:#30363d;">
+<p>🎨 <b>好みのスタイル:</b><br>{styles_text}</p>
+<p>🎁 <b>必ず入れてほしい家具:</b><br><span style='color: #58a6ff;'>{req_names_text}</span></p>
 <hr style="border-color:#30363d;">
 <p>💰 <b>予算:</b> {client['budget']:,} Cr</p>
 <p>🔥 <b>必須最低温度:</b> {client['min_temp']}°C 以上</p>
@@ -262,11 +289,17 @@ with col_right:
     st.progress(cost_percentage)
 
     if st.button("🔨 リノベーション施工・レビュー実行", type="primary"):
-        result = evaluate_renovation(st.session_state.current_client, placed_ids)
+        # 現在のクライアントの必須家具キーリストを取得
+        current_reqs = st.session_state.client_required_items.get(st.session_state.current_client, [])
+        
+        # 必須家具のリストを引数として渡す
+        result = evaluate_renovation(st.session_state.current_client, placed_ids, current_reqs)
         
         st.subheader("📝 施工評価結果")
         st.markdown(f"### 評価ランク: **{result['rank']}** (スコア: {result['score']}/100)")
         st.write(result['comment'])
+        
+        # ... 以降の報酬・評価処理 ...
 
         # 評価に応じた処理の分岐
         if result['rank'] in ["S", "A"]:
