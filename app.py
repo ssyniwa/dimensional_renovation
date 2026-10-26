@@ -8,10 +8,10 @@ from models import calculate_room_stats, evaluate_renovation
 
 # スタイルの日本語名マッピング
 STYLE_NAMES = {
-    "industrial_magma": "🔥 工業・マグマ風 (溶岩竜族向け)",
-    "cyberpunk_neon": "🤖 サイバー・ネオン風 (電脳AI向け)",
-    "crystal_ocean": "💎 深海・クリスタル風 (深海生命体向け)",
-    "astral_ether": "🌌 次元・エーテル風 (風使い向け)"
+    "industrial_magma": "🔥 工業・マグマ風",
+    "cyberpunk_neon": "🤖 サイバー・ネオン風",
+    "crystal_ocean": "💎 深海・クリスタル風",
+    "astral_ether": "🌌 次元・エーテル風 "
 }
 
 # ページ基本設定
@@ -86,7 +86,7 @@ st.title("異次元インテリア・リノベーション")
 st.caption("マルチバースの異世界顧客に向けた、理想の次元空間設計シミュレーション")
 
 # 3カラムの配分を見直し (左: クライアント要件 | 中央: グリッド設計 | 右: カタログ & モニター)
-col_client, col_grid, col_right = st.columns([1, 1.5, 1.2])
+col_client, col_grid, col_right = st.columns([0.8, 2.0, 0.8])
 
 # --- カラム1: クライアント要件 ---
 with col_client:
